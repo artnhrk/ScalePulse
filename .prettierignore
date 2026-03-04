@@ -1,0 +1,10 @@
+node_modules
+dist
+coverage
+
+.prettierrc
+eslint.config.js
+vitest.config.js
+
+*.json
+*.md
