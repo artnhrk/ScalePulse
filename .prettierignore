@@ -9,3 +9,4 @@ vitest.setup.js
 
 *.json
 *.md
+*.yml

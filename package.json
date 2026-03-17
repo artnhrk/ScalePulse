@@ -1,5 +1,8 @@
 {
   "name": "scalepulse",
+  "engines": {
+    "node": ">=22.0.0 <23.0.0"
+  },
   "version": "1.0.0",
   "description": "HIGH_THROUGHPUT",
   "homepage": "https://github.com/pythonpioneer/ScalePulse#readme",
@@ -31,6 +34,7 @@
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
     "prepare": "husky",
+    "audit:check": "npx check-audit",
     "test": "vitest run",
     "test:tree": "vitest run --reporter=tree",
     "test:ci": "vitest run --reporter=dot",
@@ -47,8 +51,7 @@
     "@scalar/fastify-api-reference": "^1.48.5",
     "@sinclair/typebox": "^0.34.48",
     "dotenv": "^17.3.1",
-    "fastify": "^5.7.4",
-    "prisma": "^7.4.1"
+    "fastify": "^5.7.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
@@ -60,7 +63,9 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.3.2",
+    "npm-audit-resolver": "^3.0.0-RC.0",
     "prettier": "^3.8.1",
+    "prisma": "^7.4.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
