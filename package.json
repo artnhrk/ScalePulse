@@ -32,13 +32,21 @@
     "lint:fix": "eslint . --fix",
     "prepare": "husky",
     "test": "vitest run",
+    "test:tree": "vitest run --reporter=tree",
+    "test:ci": "vitest run --reporter=dot",
     "test:watch": "vitest",
-    "coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.2.0",
     "@fastify/helmet": "^13.0.2",
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.5",
     "@prisma/client": "^7.4.1",
+    "@scalar/fastify-api-reference": "^1.48.5",
+    "@sinclair/typebox": "^0.34.48",
+    "dotenv": "^17.3.1",
     "fastify": "^5.7.4",
     "prisma": "^7.4.1"
   },
