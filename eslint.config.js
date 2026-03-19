@@ -12,6 +12,7 @@ export default [
             'node_modules',
             'eslint.config.js',
             'vitest.config.js',
+            'vitest.setup.js',
             'playground',
             'coverage'
         ]
@@ -84,6 +85,14 @@ export default [
             'max-lines-per-function': ['warn', 80],
             'max-params': ['warn', 5],
         }
+    },
+
+    {
+        // ignoring these rules for test files
+        files: ['**/*.test.ts', '**/*.spec.ts'],
+        rules: {
+            'max-lines-per-function': 'off',
+        },
     },
 
     eslintConfigPrettier

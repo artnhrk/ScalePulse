@@ -5,6 +5,8 @@ coverage
 .prettierrc
 eslint.config.js
 vitest.config.js
+vitest.setup.js
 
 *.json
 *.md
+*.yml

@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [master, development, production]
+  pull_request:
+    branches: [master, development, production]
+
+# Cancel in-progress jobs if a new one is started on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gate:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      PORT: ${{ secrets.PORT }}
+      COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+      LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Check Formatting
+        run: npm run format:check
+
+      - name: Lint Code
+        run: npm run lint
+
+      - name: Security Audit
+        run: npm run audit:check
+
+      - name: Test Code
+        run: npm run test:ci
