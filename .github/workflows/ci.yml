@@ -33,7 +33,7 @@ jobs:
           cache: "npm"
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm ci --loglevel=error
 
       - name: Check Formatting
         run: npm run format:check
