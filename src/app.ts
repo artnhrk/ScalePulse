@@ -8,7 +8,8 @@ import Fastify from 'fastify';
 
 import { generateRequestId } from './bootstrap/requestId.js';
 import { env } from './config/env.js';
-import healthModules from './modules/health/index.js';
+import healthModule from './modules/health/index.js';
+import visitorModule from './modules/visitor/index.js';
 import requestIdPlugin from './plugins/requestId.plugin.js';
 import { REQUEST_ID_HEADER } from './shared/constants/headers.constant.js';
 
@@ -63,7 +64,8 @@ export default async function buildApp() {
     await app.register(requestIdPlugin);
 
     // register all modules
-    await app.register(healthModules);
+    await app.register(healthModule);
+    await app.register(visitorModule);
 
     return app;
 }
