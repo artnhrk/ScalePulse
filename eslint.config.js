@@ -12,9 +12,11 @@ export default [
             'node_modules',
             'eslint.config.js',
             'vitest.config.js',
+            'prisma.config.ts',
             'vitest.setup.js',
             'playground',
-            'coverage'
+            'coverage',
+            'schema.prisma',
         ]
     },
 

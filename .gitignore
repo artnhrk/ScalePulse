@@ -34,4 +34,3 @@ playground
 *.log.*
 *-audit.json
 appLogs/
-/src/generated/prisma

@@ -8,6 +8,7 @@ import Fastify from 'fastify';
 
 import { generateRequestId } from './bootstrap/requestId.js';
 import { env } from './config/env.js';
+import prismaPlugin from './infra/database/prisma.plugin.js';
 import healthModule from './modules/health/index.js';
 import visitorModule from './modules/visitor/index.js';
 import requestIdPlugin from './plugins/requestId.plugin.js';
@@ -62,6 +63,7 @@ export default async function buildApp() {
 
     // register all plugins
     await app.register(requestIdPlugin);
+    await app.register(prismaPlugin);
 
     // register all modules
     await app.register(healthModule);

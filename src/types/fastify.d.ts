@@ -1,5 +1,7 @@
 import 'fastify';
 
+import type { PrismaClient } from '@prisma/client';
+
 declare module 'fastify' {
     interface FastifyInstance {
         config: {
@@ -7,6 +9,7 @@ declare module 'fastify' {
             PORT: number;
             LOG_LEVEL: string;
         };
+        prisma: PrismaClient;
     }
 
     interface FastifyRequest {
