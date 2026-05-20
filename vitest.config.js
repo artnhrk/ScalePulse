@@ -9,6 +9,8 @@ export default defineConfig({
         envFile: '.env.test',
         setupFiles: 'vitest.setup.js',
 
+        include: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+
         coverage: {
             provider: 'v8',
 
