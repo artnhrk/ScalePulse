@@ -18,7 +18,7 @@ describe('Health Routes (integration)', () => {
     it('should return status code 200', async () => {
         const res = await app.inject({
             method: 'GET',
-            url: '/health',
+            url: '/api/v1/health',
         });
 
         expect(res.statusCode).toBe(StatusCode.OK);
