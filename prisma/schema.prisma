@@ -1,48 +1,53 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+    provider = "postgresql"
 }
 
 model User {
-  id        String   @id @db.Uuid
-  username  String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  pages     Page[]
+    id        String   @id @db.Uuid
+    username  String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    pages     Page[]
 
-  @@index([username])
+    @@index([username])
 }
 
 model Page {
-  id     String @id @db.Uuid
-  slug   String
-  userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id     String @id @db.Uuid
+    slug   String
+    userId String @db.Uuid
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  stats DailyStat[]
+    // migration configuration
+    intialCount Int     @default(0)
+    isSeeded    Boolean @default(false)
+    source      String? @db.VarChar(200)
 
-  @@unique([userId, slug])
-  @@index([userId])
+    stats DailyStat[]
+
+    @@unique([userId, slug])
+    @@index([userId])
 }
 
 model DailyStat {
-  id     String @id @db.Uuid
-  pageId String @db.Uuid
-  page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+    id     String @id @db.Uuid
+    pageId String @db.Uuid
+    page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
-  date        DateTime @db.Date
-  visitCount  BigInt   @default(0)
-  uniqueCount BigInt?
+    date        DateTime @db.Date
+    visitCount  BigInt   @default(0)
+    uniqueCount BigInt?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  @@unique([pageId, date])
-  @@index([pageId, date])
+    @@unique([pageId, date])
+    @@index([pageId, date])
 }
