@@ -1,6 +1,5 @@
 import { defineConfig } from 'vitest/config';
 
-
 export default defineConfig({
     test: {
         environment: 'node',
@@ -14,27 +13,18 @@ export default defineConfig({
         coverage: {
             provider: 'v8',
 
-            reporter: [
-                'text',
-                'html',
-                'json-summary'
-            ],
+            reporter: ['text', 'html', 'json-summary'],
 
             reportsDirectory: './coverage',
 
-            exclude: [
-                'node_modules/',
-                'dist/',
-                'test/',
-                '**/*.config.*'
-            ],
+            exclude: ['node_modules/', 'dist/', 'test/', '**/*.config.*'],
 
             thresholds: {
                 lines: 80,
                 functions: 80,
                 branches: 70,
-                statements: 80
-            }
+                statements: 80,
+            },
         },
-    }
+    },
 });
