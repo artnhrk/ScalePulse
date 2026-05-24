@@ -33,6 +33,21 @@ export default [
     },
 
     {
+        settings: {
+            'import/resolver': {
+                alias: {
+                    map: [
+                        ['#shared', './src/shared'],
+                        ['#config', './src/config'],
+                        ['#bootstrap', './src/bootstrap'],
+                        ['#plugins', './src/plugins'],
+                        ['#infra', './src/infra'],
+                        ['#modules', './src/modules'],
+                    ],
+                    extensions: ['.ts', '.js', '.json'],
+                },
+            },
+        },
         plugins: {
             import: importPlugin,
             'simple-import-sort': simpleImportSort

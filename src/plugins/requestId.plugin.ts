@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
 
-import { generateRequestId } from '../bootstrap/requestId.js';
-import { REQUEST_ID_HEADER } from '../shared/constants/headers.constant.js';
+import { generateRequestId } from '#bootstrap/requestId.js';
+import { REQUEST_ID_HEADER } from '#shared/constants/headers.constant.js';
 
 export default fp(function requestIdPlugin(app) {
     app.decorateRequest('requestId', '');

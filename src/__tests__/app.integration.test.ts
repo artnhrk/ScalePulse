@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import buildApp from '../app.js';
+import buildApp from '#app/app.js';
 
 describe('App (integration)', () => {
     let app: FastifyInstance;
@@ -48,7 +48,7 @@ describe('App (integration)', () => {
 
             // force a fresh module import so env-dependent logic re-runs
             vi.resetModules();
-            const { default: buildAppFresh } = await import('../app.js');
+            const { default: buildAppFresh } = await import('#app/app.js');
 
             app = await buildAppFresh();
         });

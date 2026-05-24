@@ -1,8 +1,8 @@
 import type { IncomingMessage } from 'http';
 import { describe, expect, it, vi } from 'vitest';
 
-import { generateRequestId } from '../../bootstrap/requestId.js';
-import { REQUEST_ID_HEADER } from '../../shared/constants/headers.constant.js';
+import { generateRequestId } from '#bootstrap/requestId.js';
+import { REQUEST_ID_HEADER } from '#shared/constants/headers.constant.js';
 
 describe('generateRequestId()', () => {
     const dummyRequestId = 'dummy-request-id-69';

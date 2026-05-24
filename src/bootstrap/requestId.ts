@@ -1,6 +1,6 @@
 import type { IncomingMessage } from 'node:http';
 
-import { REQUEST_ID_HEADER } from '../shared/constants/headers.constant.js';
+import { REQUEST_ID_HEADER } from '#shared/constants/headers.constant.js';
 
 export const generateRequestId = (req: IncomingMessage) => {
     const requestId = req.headers[REQUEST_ID_HEADER];

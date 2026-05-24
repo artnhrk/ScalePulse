@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import fatal from '../../../shared/errors/fatal.errors.js';
+import fatal from '#shared/errors/fatal.errors.js';
 
 describe('fatal()', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});

@@ -1,11 +1,25 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
+
+import VisitorController from './visitor.controller.js';
+import { getVisitOptions, setInitialCountOptions } from './visitor.routes.options.js';
+import type { VisitParams } from './visitor.schema.js';
 
 export default function visitRoutes(app: FastifyInstance) {
-    // Route 1: Set the initial count of the page
-    app.post('/set-count', () => {
-        return 'rest';
-    });
-    app.get('/:username/:page', () => {
-        return 'visit';
-    });
+    const visitorController = new VisitorController();
+
+    app.post(
+        '/set-count/:username/:page',
+        { schema: setInitialCountOptions },
+        (req: FastifyRequest<{ Params: VisitParams }>) => {
+            return visitorController.setInitialCount(req.params);
+        },
+    );
+
+    app.get(
+        '/:username/:page',
+        { schema: getVisitOptions },
+        (req: FastifyRequest<{ Params: VisitParams }>) => {
+            return visitorController.setInitialCount(req.params);
+        },
+    );
 }

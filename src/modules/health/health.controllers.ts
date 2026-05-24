@@ -1,7 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 
-import { HealthStatusEnum } from '../../shared/enums/healthStatus.enum.js';
-import { ServiceStatusEnum } from '../../shared/enums/serviceStatus.enum.js';
+import { HealthStatusEnum } from '#shared/enums/healthStatus.enum.js';
+import { ServiceStatusEnum } from '#shared/enums/serviceStatus.enum.js';
+
 import { HealthRepository } from './health.repo.js';
 
 export default class HealthController {
@@ -19,7 +20,7 @@ export default class HealthController {
 
         return {
             status: isDbHealthy ? HealthStatusEnum.HEALTHY : HealthStatusEnum.UNHEALTHY,
-            uptime: process.uptime(), // server uptime
+            uptime: process.uptime(),
             timestamp: Date.now(),
             services: {
                 db: isDbHealthy ? ServiceStatusEnum.UP : ServiceStatusEnum.DOWN,

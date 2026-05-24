@@ -1,7 +1,7 @@
 import { Value } from '@sinclair/typebox/value';
 import { describe, expect, it } from 'vitest';
 
-import { portValidationSchema } from '../../config/env.schema.js';
+import { portValidationSchema } from '#config/env.schema.js';
 
 describe('portValidationSchema', () => {
     it('should decode a valid port', () => {

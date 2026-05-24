@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox';
 
-import { ServiceStatusEnum } from '../../shared/enums/serviceStatus.enum.js';
+import { ServiceStatusEnum } from '#shared/enums/serviceStatus.enum.js';
 
 export const healthResponseSchema = Type.Object({
     status: Type.String(),
