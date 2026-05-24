@@ -2,7 +2,11 @@ import type { FastifySchema } from 'fastify';
 
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
 
-import { setInitialCountBodySchema, visitParamsSchema, visitResponseSchema } from './visitor.schema.js';
+import {
+    setInitialCountBodySchema,
+    visitParamsSchema,
+    visitResponseSchema,
+} from './visitor.schema.js';
 
 export const setInitialCountOptions: FastifySchema = {
     tags: ['Visit'],
