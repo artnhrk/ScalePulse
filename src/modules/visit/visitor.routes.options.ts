@@ -3,18 +3,20 @@ import type { FastifySchema } from 'fastify';
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
 
 import {
-    setInitialCountBodySchema,
+    errorResponseSchema,
+    registerBodySchema,
     visitParamsSchema,
     visitResponseSchema,
 } from './visitor.schema.js';
 
-export const setInitialCountOptions = {
+export const registerOptions = {
     tags: ['Visit'],
     summary: 'Set initial page count',
     params: visitParamsSchema,
-    body: setInitialCountBodySchema,
+    body: registerBodySchema,
     response: {
         [StatusCode.CREATED]: visitResponseSchema,
+        [StatusCode.INTERNAL_SERVER_ERROR]: errorResponseSchema,
     },
 } satisfies FastifySchema;
 

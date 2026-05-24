@@ -26,9 +26,9 @@ model Page {
     updatedAt DateTime @updatedAt
 
     // migration configuration
-    intialCount Int     @default(0)
-    isSeeded    Boolean @default(false)
-    source      String? @db.VarChar(200)
+    initialCount       Int     @default(0)
+    isSeeded           Boolean @default(false)
+    initialCountSource String? @db.VarChar(200)
 
     stats DailyStat[]
 
