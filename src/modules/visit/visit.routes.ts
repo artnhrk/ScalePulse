@@ -1,25 +1,22 @@
-import type { FastifyInstance, FastifyRequest } from 'fastify';
+import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import type { FastifyInstance } from 'fastify';
 
 import VisitorController from './visitor.controller.js';
 import { getVisitOptions, setInitialCountOptions } from './visitor.routes.options.js';
-import type { VisitParams } from './visitor.schema.js';
 
 export default function visitRoutes(app: FastifyInstance) {
     const visitorController = new VisitorController();
+    const routes = app.withTypeProvider<TypeBoxTypeProvider>();
 
-    app.post(
+    routes.post(
         '/set-count/:username/:page',
         { schema: setInitialCountOptions },
-        (req: FastifyRequest<{ Params: VisitParams }>) => {
+        (req) => {
             return visitorController.setInitialCount(req.params);
         },
     );
 
-    app.get(
-        '/:username/:page',
-        { schema: getVisitOptions },
-        (req: FastifyRequest<{ Params: VisitParams }>) => {
-            return visitorController.setInitialCount(req.params);
-        },
-    );
+    routes.get('/:username/:page', { schema: getVisitOptions }, (req) => {
+        return visitorController.setInitialCount(req.params);
+    });
 }

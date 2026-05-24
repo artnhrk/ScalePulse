@@ -3,6 +3,7 @@ import fastifyCors from '@fastify/cors';
 import fastifyHelmet from '@fastify/helmet';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
+import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import scalar from '@scalar/fastify-api-reference';
 import Fastify, { type FastifyInstance } from 'fastify';
 
@@ -23,7 +24,7 @@ export default async function buildApp() {
         },
         requestIdHeader: REQUEST_ID_HEADER,
         genReqId: generateRequestId,
-    });
+    }).withTypeProvider<TypeBoxTypeProvider>();
 
     // enable cookie
     await app.register(fastifyCookie, {

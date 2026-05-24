@@ -8,7 +8,7 @@ import {
     visitResponseSchema,
 } from './visitor.schema.js';
 
-export const setInitialCountOptions: FastifySchema = {
+export const setInitialCountOptions = {
     tags: ['Visit'],
     summary: 'Set initial page count',
     params: visitParamsSchema,
@@ -16,13 +16,13 @@ export const setInitialCountOptions: FastifySchema = {
     response: {
         [StatusCode.CREATED]: visitResponseSchema,
     },
-};
+} satisfies FastifySchema;
 
-export const getVisitOptions: FastifySchema = {
+export const getVisitOptions = {
     tags: ['Visit'],
     summary: 'Get visit count for a page',
     params: visitParamsSchema,
     response: {
         [StatusCode.OK]: visitResponseSchema,
     },
-};
+} satisfies FastifySchema;
