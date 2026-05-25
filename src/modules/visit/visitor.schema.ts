@@ -1,6 +1,7 @@
 import { type Static, Type } from '@sinclair/typebox';
 
 const SLUG_PATTERN = '^[a-z0-9_-]+$';
+const EMAIL_PATTERN = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
 
 export const visitParamsSchema = Type.Object(
     {
@@ -24,8 +25,9 @@ export type VisitParams = Static<typeof visitParamsSchema>;
 
 export const registerBodySchema = Type.Object(
     {
+        email: Type.String({ maxLength: 200, pattern: EMAIL_PATTERN }),
         count: Type.Optional(Type.Integer({ minimum: 1, maximum: 1_000_000_000 })),
-        source: Type.String({ maxLength: 200 }),
+        source: Type.Optional(Type.String({ maxLength: 200 })),
     },
     {
         additionalProperties: false,

@@ -10,10 +10,16 @@ export interface SetInitialCountArgs {
 
 export default class VisitorController {
     setInitialCount({ params, logger: _logger }: SetInitialCountArgs) {
-        return {
-            username: params.username,
-            page: params.page,
-            count: 0,
-        };
+        try {
+            const { username, page } = params;
+            return {
+                username,
+                page,
+                count: 0,
+            };
+        } catch (error) {
+            _logger.error(error);
+            throw error;
+        }
     }
 }
