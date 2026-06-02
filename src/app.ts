@@ -7,6 +7,8 @@ import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import scalar from '@scalar/fastify-api-reference';
 import Fastify, { type FastifyInstance } from 'fastify';
 
+import errorHandlerPlugin from '#plugins/errorHandler.plugin.js';
+
 import { generateRequestId } from './bootstrap/requestId.js';
 import { env } from './config/env.js';
 import prismaPlugin from './infra/database/prisma.plugin.js';
@@ -65,6 +67,7 @@ export default async function buildApp() {
     // register all plugins
     await app.register(requestIdPlugin);
     await app.register(prismaPlugin);
+    await app.register(errorHandlerPlugin);
 
     // wrapping v1 apis in a plugin
     async function apiV1(app: FastifyInstance) {
