@@ -13,6 +13,7 @@ import { generateRequestId } from './bootstrap/requestId.js';
 import { env } from './config/env.js';
 import prismaPlugin from './infra/database/prisma.plugin.js';
 import healthModule from './modules/health/index.js';
+import userModule from './modules/user/index.js';
 import visitModule from './modules/visit/index.js';
 import requestIdPlugin from './plugins/requestId.plugin.js';
 import { REQUEST_ID_HEADER } from './shared/constants/headers.constant.js';
@@ -72,6 +73,7 @@ export default async function buildApp() {
     // wrapping v1 apis in a plugin
     async function apiV1(app: FastifyInstance) {
         await app.register(healthModule);
+        await app.register(userModule, { prefix: '/user' });
         await app.register(visitModule, { prefix: '/visit' });
     }
 

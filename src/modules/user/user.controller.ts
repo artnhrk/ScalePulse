@@ -8,7 +8,7 @@ export interface SetInitialCountArgs {
     logger: FastifyBaseLogger;
 }
 
-export default class VisitorController {
+export default class UserController {
     setInitialCount({ params, logger: _logger }: SetInitialCountArgs) {
         const { username, page } = params;
 

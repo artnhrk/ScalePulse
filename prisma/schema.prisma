@@ -9,11 +9,12 @@ datasource db {
 model User {
     id        String   @id @db.Uuid
     username  String   @unique
+    email     String   @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     pages     Page[]
 
-    @@index([username])
+    // index already exists on username and email
 }
 
 model Page {
