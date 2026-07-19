@@ -1,12 +1,10 @@
-import type { PrismaClient } from '@prisma/client';
-
 import { HealthStatusEnum } from '#shared/enums/healthStatus.enum.js';
 import { ServiceStatusEnum } from '#shared/enums/serviceStatus.enum.js';
 
-import { HealthRepository } from './health.repo.js';
+import type { HealthRepository } from './health.repo.js';
 
 export default class HealthController {
-    constructor(private prisma: PrismaClient) {}
+    constructor(private healthRepo: HealthRepository) {}
 
     healthCheck() {
         return {
@@ -17,8 +15,7 @@ export default class HealthController {
     }
 
     async dbHealthCheck() {
-        const repo = new HealthRepository(this.prisma);
-        const isDbHealthy = await repo.checkDb();
+        const isDbHealthy = await this.healthRepo.checkDb();
 
         return {
             status: isDbHealthy ? HealthStatusEnum.HEALTHY : HealthStatusEnum.UNHEALTHY,

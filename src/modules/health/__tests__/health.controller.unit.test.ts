@@ -1,14 +1,14 @@
-import type { PrismaClient } from '@prisma/client';
 import { describe, expect, it } from 'vitest';
 
 import HealthController from '../health.controllers.js';
+import type { HealthRepository } from '../health.repo.js';
 
-const prismaMock = {
-    $queryRaw: () => Promise.resolve([[1]]),
-} as unknown as PrismaClient;
+const repoMock = {
+    checkDb: () => Promise.resolve(true),
+} as unknown as HealthRepository;
 
 describe('Health Controller (unit)', () => {
-    const healthController = new HealthController(prismaMock);
+    const healthController = new HealthController(repoMock);
 
     it('should return health info', () => {
         const result = healthController.healthCheck();
