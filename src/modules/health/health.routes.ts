@@ -4,7 +4,7 @@ import HealthController from './health.controllers.js';
 import { getHealthOptions } from './health.routes.options.js';
 
 export default function healthRoutes(app: FastifyInstance) {
-    const healthController = new HealthController();
+    const healthController = new HealthController(app.prisma);
 
     // Route 1: Check the health of the server '/health' [using GET] (public)
     app.get('/health', getHealthOptions('Check Server Health'), () =>
@@ -13,6 +13,6 @@ export default function healthRoutes(app: FastifyInstance) {
 
     // Route 2: Check the health of the database '/health/db' [using GET] (public)
     app.get('/health/db', getHealthOptions('Check DB Health'), () =>
-        healthController.dbHealthCheck(app),
+        healthController.dbHealthCheck(),
     );
 }

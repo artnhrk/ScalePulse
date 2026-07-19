@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+import type { PrismaClient } from '@prisma/client';
 
 import { HealthStatusEnum } from '#shared/enums/healthStatus.enum.js';
 import { ServiceStatusEnum } from '#shared/enums/serviceStatus.enum.js';
@@ -6,6 +6,8 @@ import { ServiceStatusEnum } from '#shared/enums/serviceStatus.enum.js';
 import { HealthRepository } from './health.repo.js';
 
 export default class HealthController {
+    constructor(private prisma: PrismaClient) {}
+
     healthCheck() {
         return {
             status: HealthStatusEnum.HEALTHY,
@@ -14,8 +16,8 @@ export default class HealthController {
         };
     }
 
-    async dbHealthCheck(app: FastifyInstance) {
-        const repo = new HealthRepository(app.prisma);
+    async dbHealthCheck() {
+        const repo = new HealthRepository(this.prisma);
         const isDbHealthy = await repo.checkDb();
 
         return {
