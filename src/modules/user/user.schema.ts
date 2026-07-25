@@ -2,7 +2,6 @@ import { type Static, Type } from '@sinclair/typebox';
 
 import { EMAIL_PATTERN, SLUG_PATTERN } from '#shared/constants/patterns.constant.js';
 
-export const emailSchema = Type.String({ maxLength: 200, pattern: EMAIL_PATTERN });
 export const usernameSchema = Type.String({
     minLength: 1,
     maxLength: 200,
@@ -13,6 +12,7 @@ export const pageSchema = Type.String({
     maxLength: 200,
     pattern: SLUG_PATTERN,
 });
+export const emailSchema = Type.String({ maxLength: 200, pattern: EMAIL_PATTERN });
 export const countSchema = Type.Integer({ minimum: 1, maximum: 1_000_000_000 });
 export const sourceSchema = Type.Optional(Type.String({ maxLength: 200 }));
 
