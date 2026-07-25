@@ -11,6 +11,8 @@ export default function userRoutes(app: FastifyInstance) {
     routes.post('/register/:username/:page', { schema: registerOptions }, (req) => {
         const logger = req.log;
         const params = req.params;
-        return userController.setInitialCount({ params, logger });
+        const body = req.body;
+
+        return userController.register({ params, logger, body });
     });
 }
