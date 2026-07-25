@@ -14,15 +14,15 @@ export const pageSchema = Type.String({
 });
 export const emailSchema = Type.String({ maxLength: 200, pattern: EMAIL_PATTERN });
 export const countSchema = Type.Integer({ minimum: 1, maximum: 1_000_000_000 });
-export const sourceSchema = Type.Optional(Type.String({ maxLength: 200 }));
+export const sourceSchema = Type.String({ maxLength: 200 });
 
 export const registerBodySchema = Type.Object(
     {
         username: usernameSchema,
         page: pageSchema,
         email: emailSchema,
-        count: countSchema,
-        source: sourceSchema,
+        count: Type.Optional(countSchema),
+        source: Type.Optional(sourceSchema),
     },
     {
         additionalProperties: false,
@@ -34,9 +34,9 @@ export type RegisterBody = Static<typeof registerBodySchema>;
 export const registerResponseSchema = Type.Object({
     username: usernameSchema,
     page: pageSchema,
-    email: emailSchema,
-    count: countSchema,
-    source: sourceSchema,
+    email: emailSchema, // email is required for later migrations without braking
+    count: countSchema, // this will be visible to everyone, [for migrations from other platforms]
+    source: Type.Union([sourceSchema, Type.Null()]), // this will be visible to everyone, [for transparency from other platforms]
 });
 
 export const errorResponseSchema = Type.Object({

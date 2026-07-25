@@ -1,13 +1,9 @@
 import type { FastifyBaseLogger } from 'fastify';
 
+import type { RegisterBody } from './user.schema.js';
+
 export interface RegisterArgs {
-    body: {
-        username: string;
-        page: string;
-        email: string; // email is required for later migrations without braking
-        count?: number; // this will be visible to everyone, [for migrations from other platforms]
-        source?: string; // this will be visible to everyone, [for migrations from other platforms]
-    };
+    body: RegisterBody;
     logger: FastifyBaseLogger;
 }
 
@@ -16,27 +12,31 @@ export default class UserController {
         const { username, page, email, count, source } = body;
 
         /*
-        - Check if the username exists or not
-        - if it doesn't:
-            - check that the email exists or not
-            - if it doesn't:
-                - register the user with the username and email
-            - if it does:
-                - return an error (409 Conflict)
-        - if it does:
-            - match the email
-            - if it doesn't:
-                - return an error (409 Conflict)
-            - if it does:
-                - register the user with the username and email
+        - find the email
+        - if email exist:
+            - match the username
+            - if username matched:
+                - find page
+                - if page exists:
+                    - return conflict
+                - if page doesn't exist:
+                    - create the page
+            - if username doesn't matched:
+                - return conflict
+        - if email doesn't exist:
+        - find the username
+        - if username exist:
+            - return conflict
+        - if username doesn't exist:
+            - create the username and page with given email
          */
 
-        return {
+        return Promise.resolve({
             username,
             page,
             email,
             count: count ?? 0,
-            countSource: source ?? null,
-        };
+            source: source ?? null,
+        });
     }
 }
