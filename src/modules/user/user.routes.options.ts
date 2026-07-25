@@ -6,13 +6,11 @@ import {
     errorResponseSchema,
     registerBodySchema,
     registerResponseSchema,
-    userParamsSchema,
 } from './user.schema.js';
 
 export const registerOptions = {
     tags: ['User'],
     summary: 'Register a user page for tracking',
-    params: userParamsSchema,
     body: registerBodySchema,
     response: {
         [StatusCode.CREATED]: registerResponseSchema,

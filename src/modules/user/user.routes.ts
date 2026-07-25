@@ -8,11 +8,10 @@ export default function userRoutes(app: FastifyInstance) {
     const userController = new UserController();
     const routes = app.withTypeProvider<TypeBoxTypeProvider>();
 
-    routes.post('/register/:username/:page', { schema: registerOptions }, (req) => {
+    routes.post('/register', { schema: registerOptions }, (req) => {
         const logger = req.log;
-        const params = req.params;
         const body = req.body;
 
-        return userController.register({ params, logger, body });
+        return userController.register({ body, logger });
     });
 }

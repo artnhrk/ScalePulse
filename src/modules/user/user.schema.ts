@@ -3,7 +3,7 @@ import { type Static, Type } from '@sinclair/typebox';
 const SLUG_PATTERN = '^[a-z0-9_-]+$';
 const EMAIL_PATTERN = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
 
-export const userParamsSchema = Type.Object(
+export const registerBodySchema = Type.Object(
     {
         username: Type.String({
             minLength: 1,
@@ -15,16 +15,6 @@ export const userParamsSchema = Type.Object(
             maxLength: 200,
             pattern: SLUG_PATTERN,
         }),
-    },
-    {
-        additionalProperties: false,
-    },
-);
-
-export type UserParams = Static<typeof userParamsSchema>;
-
-export const registerBodySchema = Type.Object(
-    {
         email: Type.String({ maxLength: 200, pattern: EMAIL_PATTERN }),
         count: Type.Optional(Type.Integer({ minimum: 1, maximum: 1_000_000_000 })),
         source: Type.Optional(Type.String({ maxLength: 200 })),
@@ -33,6 +23,8 @@ export const registerBodySchema = Type.Object(
         additionalProperties: false,
     },
 );
+
+export type RegisterBody = Static<typeof registerBodySchema>;
 
 export const registerResponseSchema = Type.Object({
     username: Type.String(),
