@@ -13,7 +13,6 @@ export interface RegisterArgs {
 }
 
 export default class UserController {
-
     register({ params, body, logger: _logger }: RegisterArgs) {
         const { username, page } = params;
         const { email, initialCount } = body;
