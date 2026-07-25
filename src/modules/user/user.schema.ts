@@ -1,23 +1,28 @@
 import { type Static, Type } from '@sinclair/typebox';
 
-const SLUG_PATTERN = '^[a-z0-9_-]+$';
-const EMAIL_PATTERN = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
+import { EMAIL_PATTERN, SLUG_PATTERN } from '#shared/constants/patterns.constant.js';
+
+export const emailSchema = Type.String({ maxLength: 200, pattern: EMAIL_PATTERN });
+export const usernameSchema = Type.String({
+    minLength: 1,
+    maxLength: 200,
+    pattern: SLUG_PATTERN,
+});
+export const pageSchema = Type.String({
+    minLength: 1,
+    maxLength: 200,
+    pattern: SLUG_PATTERN,
+});
+export const countSchema = Type.Integer({ minimum: 1, maximum: 1_000_000_000 });
+export const sourceSchema = Type.Optional(Type.String({ maxLength: 200 }));
 
 export const registerBodySchema = Type.Object(
     {
-        username: Type.String({
-            minLength: 1,
-            maxLength: 200,
-            pattern: SLUG_PATTERN,
-        }),
-        page: Type.String({
-            minLength: 1,
-            maxLength: 200,
-            pattern: SLUG_PATTERN,
-        }),
-        email: Type.String({ maxLength: 200, pattern: EMAIL_PATTERN }),
-        count: Type.Optional(Type.Integer({ minimum: 1, maximum: 1_000_000_000 })),
-        source: Type.Optional(Type.String({ maxLength: 200 })),
+        username: usernameSchema,
+        page: pageSchema,
+        email: emailSchema,
+        count: countSchema,
+        source: sourceSchema,
     },
     {
         additionalProperties: false,
@@ -27,13 +32,15 @@ export const registerBodySchema = Type.Object(
 export type RegisterBody = Static<typeof registerBodySchema>;
 
 export const registerResponseSchema = Type.Object({
-    username: Type.String(),
-    page: Type.String(),
-    count: Type.Integer(),
+    username: usernameSchema,
+    page: pageSchema,
+    email: emailSchema,
+    count: countSchema,
+    source: sourceSchema,
 });
 
 export const errorResponseSchema = Type.Object({
-    username: Type.String(),
-    page: Type.String(),
+    username: usernameSchema,
+    page: pageSchema,
     message: Type.String(),
 });

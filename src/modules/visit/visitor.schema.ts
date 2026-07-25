@@ -1,6 +1,6 @@
 import { type Static, Type } from '@sinclair/typebox';
 
-const SLUG_PATTERN = '^[a-z0-9_-]+$';
+import { SLUG_PATTERN } from '#shared/constants/patterns.constant.js';
 
 export const visitParamsSchema = Type.Object(
     {
