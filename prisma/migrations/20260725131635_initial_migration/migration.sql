@@ -16,9 +16,10 @@ CREATE TABLE "Page" (
     "userId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "initialCount" INTEGER NOT NULL DEFAULT 0,
+    "count" INTEGER NOT NULL DEFAULT 0,
     "isSeeded" BOOLEAN NOT NULL DEFAULT false,
-    "initialCountSource" VARCHAR(200),
+    "seededAt" TIMESTAMP(3),
+    "source" VARCHAR(200),
 
     CONSTRAINT "Page_pkey" PRIMARY KEY ("id")
 );
