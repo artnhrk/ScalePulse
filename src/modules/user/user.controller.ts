@@ -21,6 +21,8 @@ export default class UserController {
         const { username, page, email, count, source } = body;
 
         const user = await this.userRepository?.findByEmail(email);
+
+        // this is not real logic, it is here for testing purpose, remove this in later commits
         if (!user) {
             throw new ConflictError('Email already registered with a different username');
         }
