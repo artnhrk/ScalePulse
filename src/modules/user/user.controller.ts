@@ -1,5 +1,8 @@
 import type { FastifyBaseLogger } from 'fastify';
 
+import { ConflictError } from '#shared/errors/apiErrors/ConflictError.js';
+
+import type { UserRepository } from './user.repo.js';
 import type { RegisterBody } from './user.schema.js';
 
 export interface RegisterArgs {
@@ -8,9 +11,19 @@ export interface RegisterArgs {
 }
 
 export default class UserController {
-    register({ body, logger: _logger }: RegisterArgs) {
+    private userRepository: UserRepository;
+
+    constructor(userRepository: UserRepository) {
+        this.userRepository = userRepository;
+    }
+
+    async register({ body, logger: _logger }: RegisterArgs) {
         const { username, page, email, count, source } = body;
 
+        const user = await this.userRepository?.findByEmail(email);
+        if (!user) {
+            throw new ConflictError('Email already registered with a different username');
+        }
         /*
         - find the email
         - if email exist:

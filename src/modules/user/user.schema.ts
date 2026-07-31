@@ -38,9 +38,3 @@ export const registerResponseSchema = Type.Object({
     count: countSchema, // this will be visible to everyone, [for migrations from other platforms]
     source: Type.Union([sourceSchema, Type.Null()]), // this will be visible to everyone, [for transparency from other platforms]
 });
-
-export const errorResponseSchema = Type.Object({
-    username: usernameSchema,
-    page: pageSchema,
-    message: Type.String(),
-});

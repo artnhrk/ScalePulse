@@ -1,12 +1,9 @@
 import type { FastifySchema } from 'fastify';
 
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
+import { apiErrorResponseSchema } from '#shared/schemas/error.schema.js';
 
-import {
-    errorResponseSchema,
-    registerBodySchema,
-    registerResponseSchema,
-} from './user.schema.js';
+import { registerBodySchema, registerResponseSchema } from './user.schema.js';
 
 export const registerOptions = {
     tags: ['User'],
@@ -14,6 +11,7 @@ export const registerOptions = {
     body: registerBodySchema,
     response: {
         [StatusCode.CREATED]: registerResponseSchema,
-        [StatusCode.INTERNAL_SERVER_ERROR]: errorResponseSchema,
+        [StatusCode.CONFLICT]: apiErrorResponseSchema,
+        [StatusCode.INTERNAL_SERVER_ERROR]: apiErrorResponseSchema,
     },
 } satisfies FastifySchema;
