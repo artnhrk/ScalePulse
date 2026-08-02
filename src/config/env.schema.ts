@@ -31,12 +31,19 @@ export const cookieSecretValidationSchema = Type.String({
     minLength: 32,
 });
 
+// validate the database connection url
+export const databaseUrlValidationSchema = Type.String({
+    pattern: '^postgres(ql)?://[^\\s]+$',
+    description: 'PostgreSQL connection string',
+});
+
 // validate and define the env schema
 export const envSchema = Type.Object({
     NODE_ENV: envVarValidationSchema,
     PORT: portValidationSchema,
     LOG_LEVEL: logLevelValidationSchema,
     COOKIE_SECRET: cookieSecretValidationSchema,
+    DATABASE_URL: databaseUrlValidationSchema,
 });
 
 // define the env type

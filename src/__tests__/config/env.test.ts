@@ -30,6 +30,10 @@ describe('env', () => {
                 'COOKIE_SECRET',
                 'thisisarandomcookiesecretstringtosurpassthe32characterlimit',
             );
+            vi.stubEnv(
+                'DATABASE_URL',
+                'postgresql://postgres:postgres@localhost:5432/test',
+            );
         });
 
         it('should load ".env.test" when NODE_ENV is "test"', async () => {
@@ -64,6 +68,12 @@ describe('env', () => {
         beforeEach(() => {
             vi.resetModules();
             vi.clearAllMocks();
+
+            // set environment variables so that they pass validation
+            vi.stubEnv(
+                'DATABASE_URL',
+                'postgresql://postgres:postgres@localhost:5432/test',
+            );
         });
 
         it('should parse and export valid env variables', async () => {
