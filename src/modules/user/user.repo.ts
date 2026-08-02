@@ -2,9 +2,9 @@ import type { Prisma, PrismaClient } from '@prisma/client';
 
 import { randomUuid } from '#shared/utils/randomUuid.utils.js';
 
-import type { RegisterBody } from './user.schema.js';
+import type { IRegisterBody } from './user.schema.js';
 
-export interface IRegisterUserParams extends RegisterBody {
+export interface IRegisterUserParams extends IRegisterBody {
     isSeeded?: boolean;
     seededAt?: Date | null;
 }
@@ -19,7 +19,7 @@ export interface IRegisterPageParams {
 }
 
 export interface IRegisterPage {
-    db: IPrismaExecutor;
+    db?: IPrismaExecutor;
     params: IRegisterPageParams;
 }
 
@@ -36,11 +36,15 @@ export class UserRepository {
         return this.prisma.user.findUnique({ where: { username } });
     }
 
+    async findPageByUserId({ userId, slug }: { userId: string; slug: string }) {
+        return this.prisma.page.findUnique({ where: { userId_slug: { userId, slug } } });
+    }
+
     async getAllPages({ userId }: { userId: string }) {
         return this.prisma.page.findMany({ where: { userId } });
     }
 
-    async registerPage({ db, params }: IRegisterPage) {
+    async registerPage({ db = this.prisma, params }: IRegisterPage) {
         const { page, userId, count, isSeeded, seededAt, source } = params;
         return db.page.create({
             data: {

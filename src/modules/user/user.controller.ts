@@ -1,13 +1,18 @@
+import type { User } from '@prisma/client';
 import type { FastifyBaseLogger } from 'fastify';
 
 import { ConflictError } from '#shared/errors/apiErrors/ConflictError.js';
 
 import type { UserRepository } from './user.repo.js';
-import type { RegisterBody } from './user.schema.js';
+import type { IRegisterBody } from './user.schema.js';
 
-export interface RegisterArgs {
-    body: RegisterBody;
+export interface IRegisterArgs {
+    body: IRegisterBody;
     logger: FastifyBaseLogger;
+}
+
+interface IRegisterNewPageArgs extends IRegisterArgs {
+    user: User;
 }
 
 export default class UserController {
@@ -17,8 +22,8 @@ export default class UserController {
         this.userRepository = userRepository;
     }
 
-    async register({ body, logger }: RegisterArgs) {
-        const { username, page, email, count, source }: RegisterBody = body;
+    async register({ body, logger }: IRegisterArgs) {
+        const { username, page, email }: IRegisterBody = body;
 
         // find the user by email
         const user = await this.userRepository?.findByEmail(email);
@@ -28,7 +33,14 @@ export default class UserController {
             // find the username
             const doesUsernameExist = await this.userRepository.findByUsername(username);
             if (doesUsernameExist) {
-                throw new ConflictError(`Username registered with different email`);
+                logger.info(
+                    {
+                        username,
+                        email,
+                    },
+                    'Username registered with different email',
+                );
+                throw new ConflictError('Username registered with different email');
             }
 
             // user not found by username, register new user
@@ -36,36 +48,50 @@ export default class UserController {
         }
 
         // user exist with email but username doesn't matched
-        if (user && user.username !== username) {
-            throw new ConflictError(`Username registered with different email`);
+        if (user.username !== username) {
+            logger.info(
+                {
+                    username,
+                    email,
+                },
+                'Username registered with different email',
+            );
+            throw new ConflictError('Username registered with different email');
         }
 
-        // find the page, no-duplicate page created
-        const allPages = await this.userRepository.getAllPages({ userId: user.id });
-
         // user exist with given email and associated username
-        const doesPageExist = allPages.filter((pageData) => pageData?.slug === page);
+        const doesPageExist = await this.userRepository.findPageByUserId({
+            userId: user.id,
+            slug: page,
+        });
         if (doesPageExist) {
+            logger.info(
+                {
+                    username,
+                    page,
+                },
+                'Page already exists with given username',
+            );
             throw new ConflictError('Page already exists with given username');
         }
 
         // else create new page for given username
-
-        return Promise.resolve({
-            username,
-            page,
-            email,
-            count: count ?? 0,
-            source: source ?? undefined,
-        });
+        return this.registerNewPage({ body, logger, user });
     }
 
-    async registerNewUser({ body, logger }: RegisterArgs) {
-        const { username, page, email, count, source }: RegisterBody = body;
+    // register new user with new email, and username
+    async registerNewUser({ body, logger }: IRegisterArgs) {
+        const { username, page, email, count, source }: IRegisterBody = body;
 
         const initialCount = count ?? 0;
 
-        logger.info('Creating new user');
+        logger.info(
+            {
+                username,
+                page,
+            },
+            'Creating new user',
+        );
 
         // register the username and page
         const { user: createdUser, page: createdPage } =
@@ -79,13 +105,53 @@ export default class UserController {
                 seededAt: initialCount > 0 ? new Date() : null,
             });
 
-        return Promise.resolve({
+        return {
             username: createdUser.username,
             email: createdUser.email,
             page: createdPage.id,
+            count: createdPage.count,
+            source: createdPage.source,
             createdAt: createdUser.createdAt,
             updatedAt: createdUser.updatedAt,
-        });
+        };
+    }
+
+    // register new user with existing email and username
+    async registerNewPage({ body, logger, user }: IRegisterNewPageArgs) {
+        const { page, count, source } = body;
+        const { username, id: userId } = user;
+
+        const initialCount = count ?? 0;
+
+        logger.info(
+            {
+                username,
+                page,
+                userId,
+            },
+            'Creating new page for Existing User',
+        );
+
+        const params = {
+            userId,
+            page,
+            count: initialCount,
+            source,
+            isSeeded: initialCount > 0,
+            seededAt: initialCount > 0 ? new Date() : null,
+        };
+
+        const createdPage = await this.userRepository.registerPage({ params });
+
+        return {
+            username: user.username,
+            email: user.email,
+            page: createdPage.id,
+            count: createdPage.count,
+            source: createdPage.source,
+            createdAt: createdPage.createdAt,
+            updatedAt: createdPage.updatedAt,
+        };
     }
 }
 
@@ -108,17 +174,3 @@ export default class UserController {
         - if username doesn't exist:
             - create the username and page with given email
          */
-
-// assume everything is ok and username and page registered
-// const { user: createdUser, page: createdPage } =
-//     await this.userRepository.register({
-//         username,
-//         page,
-//         email,
-//         count: count ?? 0,
-//         ...(source !== undefined ? { source } : {}),
-//     });
-
-/** Completed section
- * if username and email is new, then register
- */

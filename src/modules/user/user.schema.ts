@@ -29,7 +29,7 @@ export const registerBodySchema = Type.Object(
     },
 );
 
-export type RegisterBody = Static<typeof registerBodySchema>;
+export type IRegisterBody = Static<typeof registerBodySchema>;
 
 export const registerResponseSchema = Type.Object({
     username: usernameSchema,
