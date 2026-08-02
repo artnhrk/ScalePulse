@@ -19,7 +19,6 @@ export const getHealthOptions = (summary: string, description?: string) => ({
     schema: {
         ...baseHealthSchema,
         summary,
-        description:
-            description ?? (baseHealthSchema.description as string) ?? 'Health Check',
+        description: description ?? (baseHealthSchema.description as string),
     },
 });

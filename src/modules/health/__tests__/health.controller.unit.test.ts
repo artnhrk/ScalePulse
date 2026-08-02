@@ -1,10 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import HealthController from '../health.controllers.js';
 import type { HealthRepository } from '../health.repo.js';
 
+const checkDbMock = vi.fn();
+
 const repoMock = {
-    checkDb: () => Promise.resolve(true),
+    checkDb: checkDbMock,
 } as unknown as HealthRepository;
 
 describe('Health Controller (unit)', () => {
@@ -16,5 +18,23 @@ describe('Health Controller (unit)', () => {
         expect(result.status).toBe('healthy');
         expect(result).toHaveProperty('timestamp');
         expect(result).toHaveProperty('uptime');
+    });
+
+    it('should return healthy status when db is up', async () => {
+        checkDbMock.mockResolvedValueOnce(true);
+
+        const result = await healthController.dbHealthCheck();
+
+        expect(result.status).toBe('healthy');
+        expect(result.services).toEqual({ db: 'up' });
+    });
+
+    it('should return unhealthy status when db is down', async () => {
+        checkDbMock.mockResolvedValueOnce(false);
+
+        const result = await healthController.dbHealthCheck();
+
+        expect(result.status).toBe('unhealthy');
+        expect(result.services).toEqual({ db: 'down' });
     });
 });
