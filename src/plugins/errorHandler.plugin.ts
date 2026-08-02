@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import type { FastifyError, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 
@@ -31,6 +32,21 @@ export default fp((app: FastifyInstance) => {
                     code: 'VALIDATION_ERROR',
                     message: 'Invalid request data',
                     details,
+                },
+            });
+        }
+
+        // Handle Prisma unique constraint error
+        // To handle duplicate key errors or duplicate entries
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === 'P2002'
+        ) {
+            return reply.status(StatusCode.CONFLICT).send({
+                success: false,
+                error: {
+                    code: 'CONFLICT',
+                    message: 'Resource already exists',
                 },
             });
         }
