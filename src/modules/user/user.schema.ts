@@ -13,7 +13,7 @@ export const pageSchema = Type.String({
     pattern: SLUG_PATTERN,
 });
 export const emailSchema = Type.String({ maxLength: 200, pattern: EMAIL_PATTERN });
-export const countSchema = Type.Integer({ minimum: 1, maximum: 1_000_000_000 });
+export const countSchema = Type.Integer({ minimum: 0, maximum: 1_000_000_000 });
 export const sourceSchema = Type.String({ maxLength: 200 });
 
 export const registerBodySchema = Type.Object(
