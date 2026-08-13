@@ -1,9 +1,11 @@
-import type { FastifyInstance } from 'fastify';
+import type buildApp from '#app/app.js';
 
 // prevent multiple shutdown signal invocations
 let shuttingDown = false;
 
-export default function registerSignalHandler(app: FastifyInstance) {
+type AppInstance = Awaited<ReturnType<typeof buildApp>>;
+
+export default function registerSignalHandler(app: AppInstance) {
     // shutdown the server gracefully for cleanup purposes
     async function shutdown(signal: NodeJS.Signals) {
         if (shuttingDown) {

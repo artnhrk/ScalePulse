@@ -1,12 +1,13 @@
-import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import buildApp from '#app/app.js';
 
-describe('App (integration)', () => {
-    let app: FastifyInstance;
+type AppInstance = Awaited<ReturnType<typeof buildApp>>;
 
-    function getRoutes(app: FastifyInstance): string {
+describe('App (integration)', () => {
+    let app: AppInstance;
+
+    function getRoutes(app: AppInstance): string {
         return app.printRoutes();
     }
 
