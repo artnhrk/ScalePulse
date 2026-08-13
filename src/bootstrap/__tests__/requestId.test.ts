@@ -1,10 +1,15 @@
-import type { IncomingMessage } from 'http';
-import { describe, expect, it, vi } from 'vitest';
+import type { IncomingMessage } from 'node:http';
+
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { generateRequestId } from '#bootstrap/requestId.js';
 import { REQUEST_ID_HEADER } from '#shared/constants/headers.constant.js';
 
 describe('generateRequestId()', () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
     const dummyRequestId = 'dummy-request-id-69';
 
     it('should return requestId when present in header', () => {
@@ -19,7 +24,7 @@ describe('generateRequestId()', () => {
         expect(requestId).toBe(dummyRequestId);
     });
 
-    it('should return the first requestId when array of requestId is present in header', () => {
+    it('should return the first requestId when multiple requestIds are present in header', () => {
         const req = {
             headers: {
                 [REQUEST_ID_HEADER]: [dummyRequestId, 'if-extra-req-id'],

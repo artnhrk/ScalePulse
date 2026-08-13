@@ -9,8 +9,8 @@ export const generateRequestId = (req: IncomingMessage) => {
         return requestId;
     }
 
-    if (Array.isArray(requestId)) {
-        return requestId[0] as string;
+    if (Array.isArray(requestId) && requestId.length > 0) {
+        return requestId[0];
     }
 
     return crypto.randomUUID();
