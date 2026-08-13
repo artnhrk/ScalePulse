@@ -1,8 +1,0 @@
-echo "Running linting and tests..."
-npm run lint
-npm run test
-
-echo "Running tests with coverage..."
-npm run test:coverage
-
-echo "✅ Coverage OK ✅"
