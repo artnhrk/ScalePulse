@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 
-import HealthController from './health.controllers.js';
+import HealthController from './health.controller.js';
 import type { HealthRepository } from './health.repo.js';
 import { getHealthOptions } from './health.routes.options.js';
 
