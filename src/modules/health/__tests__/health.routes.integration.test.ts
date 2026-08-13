@@ -1,4 +1,3 @@
-import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 import buildApp from '#app/app.js';
@@ -6,8 +5,10 @@ import { StatusCode } from '#shared/constants/statusCodes.constant.js';
 
 import { HealthRepository } from '../health.repo.js';
 
+type AppInstance = Awaited<ReturnType<typeof buildApp>>;
+
 describe('Health Routes (integration)', () => {
-    let app: FastifyInstance;
+    let app: AppInstance;
 
     beforeAll(async () => {
         app = await buildApp();
@@ -28,7 +29,7 @@ describe('Health Routes (integration)', () => {
 });
 
 describe('Health DB Routes (integration)', () => {
-    let app: FastifyInstance;
+    let app: AppInstance;
     let checkDbSpy: MockInstance;
 
     beforeAll(async () => {
