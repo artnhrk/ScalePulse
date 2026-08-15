@@ -26,12 +26,13 @@ export default class UserController {
         const { username, page, email }: IRegisterBody = body;
 
         // find the user by email
-        const user = await this.userRepository?.findByEmail(email);
+        const user = await this.userRepository?.findUserByEmail(email);
 
         // user not found by email
         if (!user) {
             // find the username
-            const doesUsernameExist = await this.userRepository.findByUsername(username);
+            const doesUsernameExist =
+                await this.userRepository.findUserByUsername(username);
             if (doesUsernameExist) {
                 logger.info(
                     {
@@ -154,23 +155,3 @@ export default class UserController {
         };
     }
 }
-
-/*
-        - find the email
-        - if email exist:
-            - match the username
-            - if username matched:
-                - find page
-                - if page exists:
-                    - return conflict
-                - if page doesn't exist:
-                    - create the page
-            - if username doesn't matched:
-                - return conflict
-        - if email doesn't exist:
-        - find the username
-        - if username exist:
-            - return conflict
-        - if username doesn't exist:
-            - create the username and page with given email
-         */

@@ -28,11 +28,11 @@ export type IPrismaExecutor = PrismaClient | Prisma.TransactionClient;
 export class UserRepository {
     constructor(private prisma: PrismaClient) {}
 
-    async findByEmail(email: string) {
+    async findUserByEmail(email: string) {
         return this.prisma.user.findUnique({ where: { email } });
     }
 
-    async findByUsername(username: string) {
+    async findUserByUsername(username: string) {
         return this.prisma.user.findUnique({ where: { username } });
     }
 
