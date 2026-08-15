@@ -1,9 +1,8 @@
 import type { Page, Prisma, PrismaClient } from '@prisma/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { type IRegisterPageParams, UserRepository } from '#modules/user/user.repo.js';
 import { randomUuid } from '#shared/utils/randomUuid.utils.js';
-
-import { type IRegisterPageParams, UserRepository } from '../user.repo.js';
 
 // mock randomUuid to return a fixed value
 const { randomUuidMock } = vi.hoisted(() => ({

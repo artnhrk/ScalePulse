@@ -36,6 +36,38 @@ describe('generateRequestId()', () => {
         expect(requestId).toBe(dummyRequestId);
     });
 
+    it('should generate a UUID string when requestId header is an empty array', () => {
+        const dummyUUID = crypto.randomUUID();
+        const uuidSpy = vi.spyOn(crypto, 'randomUUID').mockReturnValue(dummyUUID);
+
+        const req = {
+            headers: {
+                [REQUEST_ID_HEADER]: [],
+            },
+        } as unknown as IncomingMessage;
+
+        const requestId = generateRequestId(req);
+
+        expect(requestId).toBe(dummyUUID);
+        expect(uuidSpy).toHaveBeenCalled();
+    });
+
+    it('should generate a UUID string when the first requestId in the array is undefined', () => {
+        const dummyUUID = crypto.randomUUID();
+        const uuidSpy = vi.spyOn(crypto, 'randomUUID').mockReturnValue(dummyUUID);
+
+        const req = {
+            headers: {
+                [REQUEST_ID_HEADER]: [undefined, dummyRequestId],
+            },
+        } as unknown as IncomingMessage;
+
+        const requestId = generateRequestId(req);
+
+        expect(requestId).toBe(dummyUUID);
+        expect(uuidSpy).toHaveBeenCalled();
+    });
+
     it('should generate a UUID string when header is missing', () => {
         const dummyUUID = crypto.randomUUID();
         const uuidSpy = vi.spyOn(crypto, 'randomUUID').mockReturnValue(dummyUUID);
