@@ -41,6 +41,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
+    "type:check": "tsc --noEmit",
     "lint:fix": "eslint . --fix",
     "prepare": "husky",
     "audit:check": "npx check-audit",
