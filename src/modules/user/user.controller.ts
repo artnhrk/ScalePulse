@@ -109,7 +109,7 @@ export default class UserController {
         return {
             username: createdUser.username,
             email: createdUser.email,
-            page: createdPage.id,
+            page: createdPage.slug,
             count: createdPage.count,
             source: createdPage.source,
             createdAt: createdUser.createdAt,
@@ -147,7 +147,7 @@ export default class UserController {
         return {
             username: user.username,
             email: user.email,
-            page: createdPage.id,
+            page: createdPage.slug,
             count: createdPage.count,
             source: createdPage.source,
             createdAt: createdPage.createdAt,
