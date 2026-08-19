@@ -1,8 +1,10 @@
+import type { Page, User } from '@prisma/client';
 import type { FastifyBaseLogger } from 'fastify';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import UserController from '#modules/user/user.controller.js';
 import type { UserRepository } from '#modules/user/user.repo.js';
+import type { IRegisterBody } from '#modules/user/user.schema.js';
 
 const findUserByEmailMock = vi.fn();
 const findUserByUsernameMock = vi.fn();
@@ -39,32 +41,59 @@ describe('UserController (unit)', () => {
         source: 'dummy-source',
     };
 
+    type UserFixture = Pick<
+        User,
+        'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'
+    >;
+    type PageFixture = Pick<
+        Page,
+        | 'id'
+        | 'userId'
+        | 'slug'
+        | 'count'
+        | 'isSeeded'
+        | 'seededAt'
+        | 'source'
+        | 'createdAt'
+        | 'updatedAt'
+    >;
+
+    const makeBody = (overrides: Partial<IRegisterBody> = {}): IRegisterBody => ({
+        username: testData.username,
+        email: testData.email,
+        page: testData.page,
+        count: 10,
+        source: testData.source,
+        ...overrides,
+    });
+
+    const makeUser = (overrides: Partial<UserFixture> = {}): UserFixture => ({
+        id: testData.userId,
+        username: testData.username,
+        email: testData.email,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ...overrides,
+    });
+
+    const makePage = (overrides: Partial<PageFixture> = {}): PageFixture => ({
+        id: testData.pageId,
+        userId: testData.userId,
+        slug: testData.page,
+        count: 10,
+        source: testData.source,
+        isSeeded: true,
+        seededAt: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ...overrides,
+    });
+
     describe('registerNewUser()', () => {
         it('should register a new user and return the created resource', async () => {
-            const body = {
-                username: testData.username,
-                email: testData.email,
-                page: testData.page,
-                count: 10,
-                source: testData.source,
-            };
-            const user = {
-                id: testData.userId,
-                username: testData.username,
-                email: testData.email,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            const page = {
-                id: testData.pageId,
-                userId: testData.userId,
-                slug: testData.page,
-                count: 10,
-                source: testData.source,
-                isSeeded: true,
-                seededAt: new Date(),
-            };
+            const body = makeBody();
+            const user = makeUser();
+            const page = makePage();
             registerMock.mockResolvedValue({
                 user,
                 page,
@@ -92,23 +121,13 @@ describe('UserController (unit)', () => {
                 email: testData.email,
                 page: testData.page,
             };
-            const user = {
-                id: testData.userId,
-                username: testData.username,
-                email: testData.email,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            const page = {
-                id: testData.pageId,
-                userId: testData.userId,
-                slug: testData.page,
+            const user = makeUser();
+            const page = makePage({
                 count: 0,
                 source: null,
                 isSeeded: false,
                 seededAt: null,
-            };
+            });
 
             registerMock.mockResolvedValue({
                 user,
@@ -135,32 +154,9 @@ describe('UserController (unit)', () => {
 
     describe('registerNewPage()', () => {
         it('should register a new page for an existing user', async () => {
-            const body = {
-                username: testData.username,
-                email: testData.email,
-                page: testData.page,
-                count: 10,
-                source: testData.source,
-            };
-            const user = {
-                id: testData.userId,
-                username: testData.username,
-                email: testData.email,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            const createdPage = {
-                id: testData.pageId,
-                userId: testData.userId,
-                slug: testData.page,
-                count: 10,
-                source: testData.source,
-                isSeeded: true,
-                seededAt: new Date(),
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
+            const body = makeBody();
+            const user = makeUser();
+            const createdPage = makePage();
 
             registerPageMock.mockResolvedValue(createdPage);
             const result = await userController.registerNewPage({
@@ -197,24 +193,13 @@ describe('UserController (unit)', () => {
                 email: testData.email,
                 page: testData.page,
             };
-            const user = {
-                id: testData.userId,
-                username: testData.username,
-                email: testData.email,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            const createdPage = {
-                id: testData.pageId,
-                userId: testData.userId,
-                slug: testData.page,
+            const user = makeUser();
+            const createdPage = makePage({
                 count: 0,
                 isSeeded: false,
                 seededAt: null,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
+                source: null,
+            });
 
             registerPageMock.mockResolvedValue(createdPage);
             const result = await userController.registerNewPage({
@@ -238,6 +223,7 @@ describe('UserController (unit)', () => {
                 email: user.email,
                 page: createdPage.slug,
                 count: createdPage.count,
+                source: createdPage.source,
                 createdAt: createdPage.createdAt,
                 updatedAt: createdPage.updatedAt,
             });
@@ -245,31 +231,9 @@ describe('UserController (unit)', () => {
     });
 
     describe('register()', () => {
-        const body = {
-            username: testData.username,
-            email: testData.email,
-            page: testData.page,
-            count: 10,
-            source: testData.source,
-        };
-        const user = {
-            id: testData.userId,
-            username: testData.username,
-            email: testData.email,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        };
-
-        const page = {
-            id: testData.pageId,
-            userId: testData.userId,
-            slug: testData.page,
-            count: 10,
-            source: testData.source,
-            seededAt: new Date(),
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        };
+        const body = makeBody();
+        const user = makeUser();
+        const page = makePage();
 
         it('should register a new user when email and username do not exist', async () => {
             findUserByEmailMock.mockResolvedValue(null);
