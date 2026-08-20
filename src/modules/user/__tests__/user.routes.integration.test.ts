@@ -189,6 +189,7 @@ describe('User Routes (Integration)', () => {
                 slug: validPayload.page,
             });
 
+            expect(registerPageMock).not.toHaveBeenCalled();
             expect(registerMock).not.toHaveBeenCalled();
         });
 
