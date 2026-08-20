@@ -154,7 +154,7 @@ describe('User Routes (Integration)', () => {
             expect(findUserByEmailMock).toHaveBeenCalledOnce();
             expect(findUserByEmailMock).toHaveBeenCalledWith(validPayload.email);
 
-            expect(findUserByUsernameMock).not.toHaveBeenCalledOnce();
+            expect(findUserByUsernameMock).not.toHaveBeenCalled();
 
             expect(registerMock).not.toHaveBeenCalled();
         });
@@ -181,7 +181,7 @@ describe('User Routes (Integration)', () => {
             expect(findUserByEmailMock).toHaveBeenCalledOnce();
             expect(findUserByEmailMock).toHaveBeenCalledWith(validPayload.email);
 
-            expect(findUserByUsernameMock).not.toHaveBeenCalledOnce();
+            expect(findUserByUsernameMock).not.toHaveBeenCalled();
 
             expect(findPageByUserIdMock).toHaveBeenCalledOnce();
             expect(findPageByUserIdMock).toHaveBeenCalledWith({
