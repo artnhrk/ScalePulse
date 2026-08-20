@@ -12,14 +12,22 @@ import errorHandlerPlugin from '#plugins/errorHandler.plugin.js';
 import { generateRequestId } from './bootstrap/requestId.js';
 import { env } from './config/env.js';
 import prismaPlugin from './infra/database/prisma.plugin.js';
+import type { HealthRepository } from './modules/health/health.repo.js';
 import healthModule from './modules/health/index.js';
 import userModule from './modules/user/index.js';
+import type { UserRepository } from './modules/user/user.repo.js';
 import visitModule from './modules/visit/index.js';
 import requestIdPlugin from './plugins/requestId.plugin.js';
 import { REQUEST_ID_HEADER } from './shared/constants/headers.constant.js';
 
+export interface IBuildAppDeps {
+    userRepository?: UserRepository;
+    healthRepository?: HealthRepository;
+}
+
 // build the fastify app
-export default async function buildApp() {
+export default async function buildApp(deps: IBuildAppDeps = {}) {
+    const { userRepository, healthRepository } = deps;
     // create fastify instance with dynamic logger
     const app = Fastify({
         logger: {
@@ -27,6 +35,11 @@ export default async function buildApp() {
         },
         requestIdHeader: REQUEST_ID_HEADER,
         genReqId: generateRequestId,
+        ajv: {
+            customOptions: {
+                removeAdditional: false,
+            },
+        },
     }).withTypeProvider<TypeBoxTypeProvider>();
 
     // enable cookie
@@ -72,8 +85,8 @@ export default async function buildApp() {
 
     // wrapping v1 apis in a plugin
     async function apiV1(app: FastifyInstance) {
-        await app.register(healthModule);
-        await app.register(userModule, { prefix: '/user' });
+        await app.register(healthModule, { healthRepository });
+        await app.register(userModule, { prefix: '/user', userRepository });
         await app.register(visitModule, { prefix: '/visit' });
     }
 
