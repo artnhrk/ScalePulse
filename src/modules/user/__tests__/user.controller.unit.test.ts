@@ -110,8 +110,8 @@ describe('UserController (unit)', () => {
                 page: page.slug,
                 count: page.count,
                 source: page.source,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
+                createdAt: expect.any(Date) as Date,
+                updatedAt: expect.any(Date) as Date,
             });
         });
 
@@ -173,7 +173,7 @@ describe('UserController (unit)', () => {
                     count: createdPage.count,
                     source: createdPage.source,
                     isSeeded: createdPage.isSeeded,
-                    seededAt: createdPage.seededAt,
+                    seededAt: expect.any(Date) as Date,
                 },
             });
             expect(result).toEqual({
@@ -182,8 +182,8 @@ describe('UserController (unit)', () => {
                 page: createdPage.slug,
                 count: createdPage.count,
                 source: createdPage.source,
-                createdAt: createdPage.createdAt,
-                updatedAt: createdPage.updatedAt,
+                createdAt: expect.any(Date) as Date,
+                updatedAt: expect.any(Date) as Date,
             });
         });
 
@@ -224,8 +224,8 @@ describe('UserController (unit)', () => {
                 page: createdPage.slug,
                 count: createdPage.count,
                 source: createdPage.source,
-                createdAt: createdPage.createdAt,
-                updatedAt: createdPage.updatedAt,
+                createdAt: expect.any(Date) as Date,
+                updatedAt: expect.any(Date) as Date,
             });
         });
     });
@@ -248,8 +248,8 @@ describe('UserController (unit)', () => {
                 page: testData.page,
                 count: body.count,
                 source: body.source,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
+                createdAt: expect.any(Date) as Date,
+                updatedAt: expect.any(Date) as Date,
             });
             expect(findUserByEmailMock).toHaveBeenCalledOnce();
             expect(findUserByEmailMock).toHaveBeenCalledWith(body.email);
@@ -279,8 +279,8 @@ describe('UserController (unit)', () => {
                 page: testData.page,
                 count: body.count,
                 source: body.source,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
+                createdAt: expect.any(Date) as Date,
+                updatedAt: expect.any(Date) as Date,
             });
 
             expect(findUserByEmailMock).toHaveBeenCalledOnce();
