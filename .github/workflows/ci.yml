@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [master, development, production]
 
-# Cancel in-progress jobs if a new one is started on the same branch
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -15,11 +14,28 @@ jobs:
   quality-gate:
     name: Test & Lint
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: scalepulse_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d scalepulse_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     env:
       NODE_ENV: test
-      PORT: ${{ secrets.PORT }}
+      PORT: 3000
+      LOG_LEVEL: error
       COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
-      LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/scalepulse_test
 
     steps:
       - name: Checkout Code
@@ -27,19 +43,27 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
-
         with:
           node-version: 22
-          cache: "npm"
+          cache: npm
 
       - name: Install Dependencies
         run: npm ci --loglevel=error
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Database Migrations
+        run: npx prisma migrate deploy
 
       - name: Check Formatting
         run: npm run format:check
 
       - name: Lint Code
         run: npm run lint
+
+      - name: Type Check
+        run: npm run type:check
 
       - name: Security Audit
         run: npm run audit:check

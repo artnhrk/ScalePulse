@@ -1,7 +1,6 @@
-import fatal from '../shared/errors/fatal.errors.js';
+import fatal from '#shared/errors/fatal.errors.js';
 
 export default function registerCrashHandler() {
-    // crash handlers
     process.on('unhandledRejection', (reason) => {
         fatal(
             'Unhandled Promise Rejection',

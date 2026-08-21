@@ -1,12 +1,13 @@
-import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import buildApp from '../app.js';
+import buildApp from '#app/app.js';
+
+type AppInstance = Awaited<ReturnType<typeof buildApp>>;
 
 describe('App (integration)', () => {
-    let app: FastifyInstance;
+    let app: AppInstance;
 
-    function getRoutes(app: FastifyInstance): string {
+    function getRoutes(app: AppInstance): string {
         return app.printRoutes();
     }
 
@@ -48,7 +49,7 @@ describe('App (integration)', () => {
 
             // force a fresh module import so env-dependent logic re-runs
             vi.resetModules();
-            const { default: buildAppFresh } = await import('../app.js');
+            const { default: buildAppFresh } = await import('#app/app.js');
 
             app = await buildAppFresh();
         });

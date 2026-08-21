@@ -21,7 +21,17 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noPropertyAccessFromIndexSignature": true
+    "noPropertyAccessFromIndexSignature": true,
+    "baseUrl": ".",
+    "paths": {
+      "#shared/*": ["./src/shared/*"],
+      "#config/*": ["./src/config/*"],
+      "#bootstrap/*": ["./src/bootstrap/*"],
+      "#plugins/*": ["./src/plugins/*"],
+      "#infra/*": ["./src/infra/*"],
+      "#modules/*": ["./src/modules/*"],
+      "#app/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

@@ -6,7 +6,9 @@ coverage
 eslint.config.js
 vitest.config.js
 vitest.setup.js
+prisma.config.ts
 
+*.prisma
 *.json
 *.md
 *.yml

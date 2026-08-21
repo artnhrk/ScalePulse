@@ -1,114 +1,16 @@
 {
   "decisions": {
-    "1112455|@chevrotain/cst-dts-gen>@chevrotain/gast>lodash": {
+    "1145093|prisma>@prisma/config>deepmerge-ts": {
       "decision": "ignore",
-      "madeAt": 1773907824366,
-      "expiresAt": 1776500169773
+      "madeAt": 1787349398755,
+      "expiresAt": 1792533608663,
+      "reason": "dev-tooling only: prisma CLI merges local config files, no untrusted input boundary; fixed when prisma bumps deepmerge-ts to 8.x"
     },
-    "1112455|@chevrotain/gast>lodash": {
+    "1120680|esbuild": {
       "decision": "ignore",
-      "madeAt": 1773907824366,
-      "expiresAt": 1776500169773
-    },
-    "1112455|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash": {
-      "decision": "ignore",
-      "madeAt": 1773907824366,
-      "expiresAt": 1776500169773
-    },
-    "1112644|hono": {
-      "decision": "ignore",
-      "madeAt": 1773907871471,
-      "expiresAt": 1776500169773
-    },
-    "1112644|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash>hono": {
-      "decision": "ignore",
-      "madeAt": 1773907871471,
-      "expiresAt": 1776500169773
-    },
-    "1112677|hono": {
-      "decision": "ignore",
-      "madeAt": 1773907936774,
-      "expiresAt": 1776499740669
-    },
-    "1112677|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash>hono": {
-      "decision": "ignore",
-      "madeAt": 1773907936774,
-      "expiresAt": 1776499740669
-    },
-    "1112678|hono": {
-      "decision": "ignore",
-      "madeAt": 1773907959729,
-      "expiresAt": 1776499740669
-    },
-    "1112678|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash>hono": {
-      "decision": "ignore",
-      "madeAt": 1773907959729,
-      "expiresAt": 1776499740669
-    },
-    "1112911|hono": {
-      "decision": "ignore",
-      "madeAt": 1773907972460,
-      "expiresAt": 1776499740669
-    },
-    "1112911|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash>hono": {
-      "decision": "ignore",
-      "madeAt": 1773907972460,
-      "expiresAt": 1776499740669
-    },
-    "1114004|hono": {
-      "decision": "ignore",
-      "madeAt": 1773908007694,
-      "expiresAt": 1776499740669
-    },
-    "1114004|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash>hono": {
-      "decision": "ignore",
-      "madeAt": 1773908007694,
-      "expiresAt": 1776499740669
-    },
-    "1114005|hono": {
-      "decision": "ignore",
-      "madeAt": 1773908010631,
-      "expiresAt": 1776499740669
-    },
-    "1114005|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash>hono": {
-      "decision": "ignore",
-      "madeAt": 1773908010631,
-      "expiresAt": 1776499740669
-    },
-    "1114006|hono": {
-      "decision": "ignore",
-      "madeAt": 1773908021503,
-      "expiresAt": 1776499740669
-    },
-    "1114006|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash>hono": {
-      "decision": "ignore",
-      "madeAt": 1773908021503,
-      "expiresAt": 1776499740669
-    },
-    "1114341|hono": {
-      "decision": "ignore",
-      "madeAt": 1773908025447,
-      "expiresAt": 1776499740669
-    },
-    "1114341|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash>hono": {
-      "decision": "ignore",
-      "madeAt": 1773908025447,
-      "expiresAt": 1776499740669
-    },
-    "1114170|prisma>@prisma/dev>@hono/node-server": {
-      "decision": "ignore",
-      "madeAt": 1773908036627,
-      "expiresAt": 1776499740669
-    },
-    "1113311|hono": {
-      "decision": "ignore",
-      "madeAt": 1773908186759,
-      "expiresAt": 1776500169773
-    },
-    "1113311|prisma>@prisma/dev>@hono/node-server>@mrleebo/prisma-ast>chevrotain>@chevrotain/cst-dts-gen>@chevrotain/gast>lodash>hono": {
-      "decision": "ignore",
-      "madeAt": 1773908186759,
-      "expiresAt": 1776500169773
+      "madeAt": 1787349398755,
+      "expiresAt": 1792533608663,
+      "reason": "not applicable: affects esbuild dev server on Windows only; vitest uses esbuild as a transform lib on linux CI"
     }
   },
   "rules": {},

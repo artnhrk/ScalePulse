@@ -1,8 +1,8 @@
-import buildApp from './app.js';
-import registerCrashHandler from './bootstrap/crashes.js';
-import registerSignalHandler from './bootstrap/signals.js';
-import { env } from './config/env.js';
-import fatal from './shared/errors/fatal.errors.js';
+import buildApp from '#app/app.js';
+import registerCrashHandler from '#bootstrap/crashes.js';
+import registerSignalHandler from '#bootstrap/signals.js';
+import { env } from '#config/env.js';
+import fatal from '#shared/errors/fatal.errors.js';
 
 async function startServer() {
     const app = await buildApp();

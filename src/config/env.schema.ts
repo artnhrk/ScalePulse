@@ -1,6 +1,6 @@
 import { type Static, Type } from '@sinclair/typebox';
 
-import { LOG_LEVELS, NODE_ENVS } from './constants.js';
+import { LOG_LEVELS, NODE_ENVS } from '#config/constants.js';
 
 // define the server port validation constraint
 export const portValidationSchema = Type.Transform(Type.String({ pattern: '^[0-9]+$' }))
@@ -31,12 +31,19 @@ export const cookieSecretValidationSchema = Type.String({
     minLength: 32,
 });
 
+// validate the database connection url
+export const databaseUrlValidationSchema = Type.String({
+    pattern: '^postgres(ql)?://[^\\s]+$',
+    description: 'PostgreSQL connection string',
+});
+
 // validate and define the env schema
 export const envSchema = Type.Object({
     NODE_ENV: envVarValidationSchema,
     PORT: portValidationSchema,
     LOG_LEVEL: logLevelValidationSchema,
     COOKIE_SECRET: cookieSecretValidationSchema,
+    DATABASE_URL: databaseUrlValidationSchema,
 });
 
 // define the env type

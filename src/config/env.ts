@@ -1,8 +1,8 @@
 import { Value } from '@sinclair/typebox/value';
 import dotenv from 'dotenv';
 
-import fatal from '../shared/errors/fatal.errors.js';
-import { envSchema } from './env.schema.js';
+import { envSchema } from '#config/env.schema.js';
+import fatal from '#shared/errors/fatal.errors.js';
 
 if (process.env['NODE_ENV'] === 'test') {
     dotenv.config({ path: '.env.test', quiet: true });
@@ -13,10 +13,8 @@ if (process.env['NODE_ENV'] === 'test') {
 function validateEnv() {
     const env = process.env;
 
-    // check for errors
     const errors = [...Value.Errors(envSchema, env)];
 
-    // format error messages
     if (errors.length > 0) {
         const messages = errors.map((err) => {
             const key = err.path.replace('/', '');

@@ -3,17 +3,30 @@ import fastifyCors from '@fastify/cors';
 import fastifyHelmet from '@fastify/helmet';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
+import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import scalar from '@scalar/fastify-api-reference';
-import Fastify from 'fastify';
+import Fastify, { type FastifyInstance } from 'fastify';
 
-import { generateRequestId } from './bootstrap/requestId.js';
-import { env } from './config/env.js';
-import healthModules from './modules/health/index.js';
-import requestIdPlugin from './plugins/requestId.plugin.js';
-import { REQUEST_ID_HEADER } from './shared/constants/headers.constant.js';
+import { generateRequestId } from '#bootstrap/requestId.js';
+import { env } from '#config/env.js';
+import prismaPlugin from '#infra/database/prisma.plugin.js';
+import type { HealthRepository } from '#modules/health/health.repo.js';
+import healthModule from '#modules/health/index.js';
+import userModule from '#modules/user/index.js';
+import type { UserRepository } from '#modules/user/user.repo.js';
+import visitModule from '#modules/visit/index.js';
+import errorHandlerPlugin from '#plugins/errorHandler.plugin.js';
+import requestIdPlugin from '#plugins/requestId.plugin.js';
+import { REQUEST_ID_HEADER } from '#shared/constants/headers.constant.js';
+
+export interface IBuildAppDeps {
+    userRepository?: UserRepository;
+    healthRepository?: HealthRepository;
+}
 
 // build the fastify app
-export default async function buildApp() {
+export default async function buildApp(deps: IBuildAppDeps = {}) {
+    const { userRepository, healthRepository } = deps;
     // create fastify instance with dynamic logger
     const app = Fastify({
         logger: {
@@ -21,7 +34,12 @@ export default async function buildApp() {
         },
         requestIdHeader: REQUEST_ID_HEADER,
         genReqId: generateRequestId,
-    });
+        ajv: {
+            customOptions: {
+                removeAdditional: false,
+            },
+        },
+    }).withTypeProvider<TypeBoxTypeProvider>();
 
     // enable cookie
     await app.register(fastifyCookie, {
@@ -61,9 +79,18 @@ export default async function buildApp() {
 
     // register all plugins
     await app.register(requestIdPlugin);
+    await app.register(prismaPlugin);
+    await app.register(errorHandlerPlugin);
 
-    // register all modules
-    await app.register(healthModules);
+    // wrapping v1 apis in a plugin
+    async function apiV1(app: FastifyInstance) {
+        await app.register(healthModule, { healthRepository });
+        await app.register(userModule, { prefix: '/user', userRepository });
+        await app.register(visitModule, { prefix: '/visit' });
+    }
+
+    // register all/every version modules
+    await app.register(apiV1, { prefix: '/api/v1' });
 
     return app;
 }
