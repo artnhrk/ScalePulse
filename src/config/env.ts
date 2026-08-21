@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import { envSchema } from '#config/env.schema.js';
 import fatal from '#shared/errors/fatal.errors.js';
 
-
 if (process.env['NODE_ENV'] === 'test') {
     dotenv.config({ path: '.env.test', quiet: true });
 } else if (process.env['NODE_ENV'] !== 'production') {
