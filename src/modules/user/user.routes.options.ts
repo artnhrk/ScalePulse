@@ -15,3 +15,8 @@ export const registerOptions = {
         [StatusCode.INTERNAL_SERVER_ERROR]: apiErrorResponseSchema,
     },
 } satisfies FastifySchema;
+
+export const getUserOptions = (summary?: string) => ({
+    ...registerOptions,
+    summary: summary ?? registerOptions.summary,
+});

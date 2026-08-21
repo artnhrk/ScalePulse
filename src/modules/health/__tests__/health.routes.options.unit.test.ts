@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { baseHealthSchema, getHealthOptions } from '../health.routes.options.js';
+import {
+    baseHealthSchema,
+    getHealthOptions,
+} from '#modules/health/health.routes.options.js';
 
 describe('Health Route Options (unit)', () => {
     it('should default to the base description when none is provided', () => {
