@@ -1,11 +1,10 @@
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import type { FastifyInstance } from 'fastify';
 
+import UserController from '#modules/user/user.controller.js';
+import type { UserRepository } from '#modules/user/user.repo.js';
+import { registerOptions } from '#modules/user/user.routes.options.js';
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
-
-import UserController from './user.controller.js';
-import type { UserRepository } from './user.repo.js';
-import { registerOptions } from './user.routes.options.js';
 
 export default function userRoutes(
     app: FastifyInstance,

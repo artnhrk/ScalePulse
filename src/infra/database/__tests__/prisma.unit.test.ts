@@ -26,7 +26,7 @@ describe('prisma (unit)', () => {
     it('should construct a client with verbose log config in development', async () => {
         vi.stubEnv('NODE_ENV', 'development');
 
-        const { default: prisma } = await import('../prisma.js');
+        const { default: prisma } = await import('#infra/database/prisma.js');
 
         expect(prisma).toBeDefined();
         expect(prismaCtor).toHaveBeenCalledTimes(1);

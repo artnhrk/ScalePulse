@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import HealthController from '../health.controller.js';
-import type { HealthRepository } from '../health.repo.js';
+import HealthController from '#modules/health/health.controller.js';
+import type { HealthRepository } from '#modules/health/health.repo.js';
 
 const checkDbMock = vi.fn();
 

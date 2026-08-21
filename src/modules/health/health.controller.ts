@@ -1,7 +1,6 @@
+import type { HealthRepository } from '#modules/health/health.repo.js';
 import { HealthStatusEnum } from '#shared/enums/healthStatus.enum.js';
 import { ServiceStatusEnum } from '#shared/enums/serviceStatus.enum.js';
-
-import type { HealthRepository } from './health.repo.js';
 
 export default class HealthController {
     constructor(private healthRepo: HealthRepository) {}

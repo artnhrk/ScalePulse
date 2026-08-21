@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
 
-import prisma from './prisma.js';
+import prisma from '#infra/database/prisma.js';
 
 export default fp((fastify) => {
     fastify.decorate('prisma', prisma);

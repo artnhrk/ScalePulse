@@ -1,6 +1,5 @@
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
-
-import { ApiError } from './ApiError.js';
+import { ApiError } from '#shared/errors/apiErrors/ApiError.js';
 
 export class NotFoundError extends ApiError {
     constructor(message = 'Resource Not Found') {

@@ -40,7 +40,7 @@ describe('env', () => {
             vi.stubEnv('NODE_ENV', 'test');
 
             const dotenv = await import('dotenv');
-            await import('../env.js');
+            await import('#config/env.js');
 
             expect(dotenv.default.config).toHaveBeenCalledWith({
                 path: '.env.test',
@@ -52,7 +52,7 @@ describe('env', () => {
             vi.stubEnv('NODE_ENV', 'development');
 
             const dotenv = await import('dotenv');
-            await import('../env.js');
+            await import('#config/env.js');
 
             expect(dotenv.default.config).toHaveBeenCalledWith();
         });
@@ -82,7 +82,7 @@ describe('env', () => {
             vi.stubEnv('LOG_LEVEL', dummyLogLevel);
             vi.stubEnv('COOKIE_SECRET', dummyCookieSecret);
 
-            const { env } = await import('../env.js');
+            const { env } = await import('#config/env.js');
 
             expect(env.NODE_ENV).toBe(dummyNodeEnv);
             expect(env.PORT).toBe(Number(dummyPort));
@@ -98,12 +98,12 @@ describe('env', () => {
             vi.stubEnv('LOG_LEVEL', 'invalid');
             vi.stubEnv('COOKIE_SECRET', 'invalid');
 
-            const fatalModule = await import('../../shared/errors/fatal.errors.js');
+            const fatalModule = await import('#shared/errors/fatal.errors.js');
             const fatal = fatalModule.default;
 
             // this file will also throw error because `Value.Decode` from TypeBox throws error
             // even if fatal is not mocked to throw error
-            await expect(import('../env.js')).rejects.toThrow();
+            await expect(import('#config/env.js')).rejects.toThrow();
 
             expect(fatal).toHaveBeenCalled();
         });
@@ -111,11 +111,11 @@ describe('env', () => {
         it('should provide descriptive error messages for union types', async () => {
             vi.stubEnv('LOG_LEVEL', 'super-trace'); // invalid value
 
-            const fatal = (await import('../../shared/errors/fatal.errors.js')).default;
+            const fatal = (await import('#shared/errors/fatal.errors.js')).default;
 
             // this file will also throw error because `Value.Decode` from TypeBox throws error
             // even if fatal is not mocked to throw error
-            await expect(import('../env.js')).rejects.toThrow();
+            await expect(import('#config/env.js')).rejects.toThrow();
 
             // assert the content of the error message
             expect(fatal).toHaveBeenCalledWith(

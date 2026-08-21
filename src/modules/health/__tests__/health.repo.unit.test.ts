@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@prisma/client';
 import { describe, expect, it, vi } from 'vitest';
 
-import { HealthRepository } from '../health.repo.js';
+import { HealthRepository } from '#modules/health/health.repo.js';
 
 const checkDbMock = vi.fn();
 

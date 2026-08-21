@@ -7,18 +7,17 @@ import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import scalar from '@scalar/fastify-api-reference';
 import Fastify, { type FastifyInstance } from 'fastify';
 
+import { generateRequestId } from '#bootstrap/requestId.js';
+import { env } from '#config/env.js';
+import prismaPlugin from '#infra/database/prisma.plugin.js';
+import type { HealthRepository } from '#modules/health/health.repo.js';
+import healthModule from '#modules/health/index.js';
+import userModule from '#modules/user/index.js';
+import type { UserRepository } from '#modules/user/user.repo.js';
+import visitModule from '#modules/visit/index.js';
 import errorHandlerPlugin from '#plugins/errorHandler.plugin.js';
-
-import { generateRequestId } from './bootstrap/requestId.js';
-import { env } from './config/env.js';
-import prismaPlugin from './infra/database/prisma.plugin.js';
-import type { HealthRepository } from './modules/health/health.repo.js';
-import healthModule from './modules/health/index.js';
-import userModule from './modules/user/index.js';
-import type { UserRepository } from './modules/user/user.repo.js';
-import visitModule from './modules/visit/index.js';
-import requestIdPlugin from './plugins/requestId.plugin.js';
-import { REQUEST_ID_HEADER } from './shared/constants/headers.constant.js';
+import requestIdPlugin from '#plugins/requestId.plugin.js';
+import { REQUEST_ID_HEADER } from '#shared/constants/headers.constant.js';
 
 export interface IBuildAppDeps {
     userRepository?: UserRepository;

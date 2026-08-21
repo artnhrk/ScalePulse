@@ -1,9 +1,8 @@
 import type { FastifySchema } from 'fastify';
 
+import { registerBodySchema, registerResponseSchema } from '#modules/user/user.schema.js';
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
 import { apiErrorResponseSchema } from '#shared/schemas/error.schema.js';
-
-import { registerBodySchema, registerResponseSchema } from './user.schema.js';
 
 export const registerOptions = {
     tags: ['User'],

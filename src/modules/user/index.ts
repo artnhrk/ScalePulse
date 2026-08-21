@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 
-import { UserRepository } from './user.repo.js';
-import userRoutes from './user.routes.js';
+import { UserRepository } from '#modules/user/user.repo.js';
+import userRoutes from '#modules/user/user.routes.js';
 
 export interface IUserModuleOptions {
     userRepository: UserRepository | undefined;

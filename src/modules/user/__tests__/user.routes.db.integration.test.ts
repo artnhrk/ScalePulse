@@ -3,10 +3,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import buildApp from '#app/app.js';
 import prisma from '#infra/database/prisma.js';
+import { UserRepository } from '#modules/user/user.repo.js';
+import type { IRegisterResponseSchema } from '#modules/user/user.schema.js';
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
-
-import { UserRepository } from '../user.repo.js';
-import type { IRegisterResponseSchema } from '../user.schema.js';
 
 type AppInstance = Awaited<ReturnType<typeof buildApp>>;
 

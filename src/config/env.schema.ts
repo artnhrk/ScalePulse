@@ -1,6 +1,6 @@
 import { type Static, Type } from '@sinclair/typebox';
 
-import { LOG_LEVELS, NODE_ENVS } from './constants.js';
+import { LOG_LEVELS, NODE_ENVS } from '#config/constants.js';
 
 // define the server port validation constraint
 export const portValidationSchema = Type.Transform(Type.String({ pattern: '^[0-9]+$' }))

@@ -1,8 +1,7 @@
 import type { FastifySchema } from 'fastify';
 
+import { visitParamsSchema, visitResponseSchema } from '#modules/visit/visitor.schema.js';
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
-
-import { visitParamsSchema, visitResponseSchema } from './visitor.schema.js';
 
 export const getVisitOptions = {
     tags: ['Visit'],

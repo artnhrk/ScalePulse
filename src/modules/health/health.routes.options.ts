@@ -1,8 +1,7 @@
 import type { FastifySchema } from 'fastify';
 
+import { healthResponseSchema } from '#modules/health/health.schema.js';
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
-
-import { healthResponseSchema } from './health.schema.js';
 
 export const baseHealthSchema: FastifySchema = {
     tags: ['Health'],

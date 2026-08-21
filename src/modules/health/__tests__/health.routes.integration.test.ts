@@ -1,9 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 import buildApp from '#app/app.js';
+import { HealthRepository } from '#modules/health/health.repo.js';
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
-
-import { HealthRepository } from '../health.repo.js';
 
 type AppInstance = Awaited<ReturnType<typeof buildApp>>;
 

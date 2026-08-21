@@ -1,10 +1,9 @@
 import type { User } from '@prisma/client';
 import type { FastifyBaseLogger } from 'fastify';
 
+import type { UserRepository } from '#modules/user/user.repo.js';
+import type { IRegisterBody } from '#modules/user/user.schema.js';
 import { ConflictError } from '#shared/errors/apiErrors/ConflictError.js';
-
-import type { UserRepository } from './user.repo.js';
-import type { IRegisterBody } from './user.schema.js';
 
 export interface IRegisterArgs {
     body: IRegisterBody;

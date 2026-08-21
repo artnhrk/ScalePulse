@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 
-import { HealthRepository } from './health.repo.js';
-import healthRoutes from './health.routes.js';
+import { HealthRepository } from '#modules/health/health.repo.js';
+import healthRoutes from '#modules/health/health.routes.js';
 
 export interface IHealthModuleOptions {
     healthRepository: HealthRepository | undefined;

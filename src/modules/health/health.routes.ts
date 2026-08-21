@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 
-import HealthController from './health.controller.js';
-import type { HealthRepository } from './health.repo.js';
-import { getHealthOptions } from './health.routes.options.js';
+import HealthController from '#modules/health/health.controller.js';
+import type { HealthRepository } from '#modules/health/health.repo.js';
+import { getHealthOptions } from '#modules/health/health.routes.options.js';
 
 export default function healthRoutes(
     app: FastifyInstance,

@@ -1,8 +1,7 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
 
+import type { IRegisterBody } from '#modules/user/user.schema.js';
 import { randomUuid } from '#shared/utils/randomUuid.utils.js';
-
-import type { IRegisterBody } from './user.schema.js';
 
 export interface IRegisterUserParams extends IRegisterBody {
     isSeeded?: boolean;
