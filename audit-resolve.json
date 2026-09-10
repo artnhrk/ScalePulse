@@ -3,14 +3,26 @@
     "1145093|prisma>@prisma/config>deepmerge-ts": {
       "decision": "ignore",
       "madeAt": 1787349398755,
-      "expiresAt": 1792533608663,
+      "expiresAt": 1820613367988,
       "reason": "dev-tooling only: prisma CLI merges local config files, no untrusted input boundary; fixed when prisma bumps deepmerge-ts to 8.x"
     },
     "1120680|esbuild": {
       "decision": "ignore",
       "madeAt": 1787349398755,
-      "expiresAt": 1792533608663,
+      "expiresAt": 1820613367988,
       "reason": "not applicable: affects esbuild dev server on Windows only; vitest uses esbuild as a transform lib on linux CI"
+    },
+    "1153173|prisma>@prisma/config>deepmerge-ts>mysql2": {
+      "decision": "ignore",
+      "madeAt": 1789077367985,
+      "expiresAt": 1820613367988,
+      "reason": "dev-tooling only: mysql2 is pulled in by the prisma CLI, the project only uses the postgresql provider and never exposes mysql2; fixed when prisma bumps mysql2"
+    },
+    "1158532|prisma>@prisma/config>deepmerge-ts>mysql2": {
+      "decision": "ignore",
+      "madeAt": 1789077367985,
+      "expiresAt": 1820613367988,
+      "reason": "dev-tooling only: mysql2 is pulled in by the prisma CLI, the project only uses the postgresql provider and never exposes mysql2; fixed when prisma bumps mysql2"
     }
   },
   "rules": {},
