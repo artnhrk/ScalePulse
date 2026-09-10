@@ -38,6 +38,12 @@ docker compose up -d
 
 ```bash
 npx prisma generate
+npx prisma migrate dev
+```
+
+or 
+
+```bash
 npx prisma migrate deploy
 ```
 
