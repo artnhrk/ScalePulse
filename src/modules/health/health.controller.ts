@@ -13,7 +13,7 @@ export default class HealthController {
         };
     }
 
-    async dbHealthCheck() {
+    async serviceHealthCheck() {
         const isDbHealthy = await this.healthRepo.checkDb();
 
         return {

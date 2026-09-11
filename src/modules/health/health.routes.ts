@@ -16,7 +16,7 @@ export default function healthRoutes(
     );
 
     // Route 2: Check the health of the database '/health/db' [using GET] (public)
-    app.get('/health/db', getHealthOptions('Check DB Health'), () =>
-        healthController.dbHealthCheck(),
+    app.get('/health/service', getHealthOptions('Check DB Health'), () =>
+        healthController.serviceHealthCheck(),
     );
 }

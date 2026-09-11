@@ -23,7 +23,7 @@ describe('Health Controller (unit)', () => {
     it('should return healthy status when db is up', async () => {
         checkDbMock.mockResolvedValueOnce(true);
 
-        const result = await healthController.dbHealthCheck();
+        const result = await healthController.serviceHealthCheck();
 
         expect(result.status).toBe('healthy');
         expect(result.services).toEqual({ db: 'up' });
@@ -32,7 +32,7 @@ describe('Health Controller (unit)', () => {
     it('should return unhealthy status when db is down', async () => {
         checkDbMock.mockResolvedValueOnce(false);
 
-        const result = await healthController.dbHealthCheck();
+        const result = await healthController.serviceHealthCheck();
 
         expect(result.status).toBe('unhealthy');
         expect(result.services).toEqual({ db: 'down' });

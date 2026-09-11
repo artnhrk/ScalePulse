@@ -9,6 +9,7 @@ export const healthResponseSchema = Type.Object({
     services: Type.Optional(
         Type.Object({
             db: Type.Enum(ServiceStatusEnum),
+            // redis: Type.Enum(ServiceStatusEnum),
         }),
     ),
 });

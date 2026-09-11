@@ -49,7 +49,7 @@ describe('Health DB Routes (integration)', () => {
     it('should return healthy status when db is up', async () => {
         const res = await app.inject({
             method: 'GET',
-            url: '/api/v1/health/db',
+            url: '/api/v1/health/service',
         });
 
         expect(res.statusCode).toBe(StatusCode.OK);
@@ -64,7 +64,7 @@ describe('Health DB Routes (integration)', () => {
 
         const res = await app.inject({
             method: 'GET',
-            url: '/api/v1/health/db',
+            url: '/api/v1/health/service',
         });
 
         expect(res.statusCode).toBe(StatusCode.OK);
