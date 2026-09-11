@@ -15,13 +15,19 @@ export default class HealthController {
 
     async serviceHealthCheck() {
         const isDbHealthy = await this.healthRepo.checkDb();
+        const isRedisHealthy = await this.healthRepo.checkRedis();
+
+        const isEverthingHealthy = isDbHealthy && isRedisHealthy;
 
         return {
-            status: isDbHealthy ? HealthStatusEnum.HEALTHY : HealthStatusEnum.UNHEALTHY,
+            status: isEverthingHealthy
+                ? HealthStatusEnum.HEALTHY
+                : HealthStatusEnum.UNHEALTHY,
             uptime: process.uptime(),
             timestamp: Date.now(),
             services: {
                 db: isDbHealthy ? ServiceStatusEnum.UP : ServiceStatusEnum.DOWN,
+                redis: isRedisHealthy ? ServiceStatusEnum.UP : ServiceStatusEnum.DOWN,
             },
         };
     }

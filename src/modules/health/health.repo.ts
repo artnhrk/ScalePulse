@@ -11,4 +11,12 @@ export class HealthRepository {
             return false;
         }
     }
+    async checkRedis() {
+        try {
+            await Promise.resolve();
+            return true;
+        } catch {
+            return false;
+        }
+    }
 }
