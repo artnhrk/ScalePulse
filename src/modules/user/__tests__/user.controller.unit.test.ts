@@ -11,6 +11,7 @@ const findUserByUsernameMock = vi.fn();
 const findPageByUserIdMock = vi.fn();
 const registerMock = vi.fn();
 const registerPageMock = vi.fn();
+const findUserWithPagesByUsernameMock = vi.fn();
 
 const loggerMock = {
     info: vi.fn(),
@@ -23,6 +24,7 @@ const UserRepositoryMock = {
     findPageByUserId: findPageByUserIdMock,
     registerPage: registerPageMock,
     register: registerMock,
+    findUserWithPagesByUsername: findUserWithPagesByUsernameMock,
 } as unknown as UserRepository;
 
 describe('UserController (unit)', () => {
@@ -380,6 +382,58 @@ describe('UserController (unit)', () => {
 
             expect(registerMock).not.toHaveBeenCalled();
             expect(registerPageMock).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('getUserByUsername()', () => {
+        const createdAt = new Date('2026-01-01T00:00:00.000Z');
+
+        it('should return user data without email', async () => {
+            const username = testData.username;
+            const page = makePage();
+
+            findUserWithPagesByUsernameMock.mockResolvedValueOnce({
+                id: testData.userId,
+                username: testData.username,
+                createdAt,
+                pages: [page],
+            });
+
+            const result = await userController.getUserByUsername({
+                params: { username },
+                logger: loggerMock,
+            });
+
+            expect(result).toEqual({
+                username: testData.username,
+                createdAt: createdAt.toISOString(),
+                pages: [
+                    {
+                        page: page.slug,
+                        count: page.count,
+                        source: page.source,
+                        createdAt: page.createdAt.toISOString(),
+                    },
+                ],
+            });
+        });
+
+        it('should throw error if user not found', async () => {
+            const username = 'nonexistent';
+
+            findUserWithPagesByUsernameMock.mockResolvedValueOnce(undefined);
+
+            await expect(
+                userController.getUserByUsername({
+                    params: { username },
+                    logger: loggerMock,
+                }),
+            ).rejects.toThrow();
+
+            expect(findUserWithPagesByUsernameMock).toHaveBeenCalledOnce();
+            expect(findUserWithPagesByUsernameMock).toHaveBeenCalledWith({ username });
+
+            expect(loggerMock.info).toHaveBeenCalledOnce();
         });
     });
 });

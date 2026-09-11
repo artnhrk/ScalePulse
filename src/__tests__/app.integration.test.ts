@@ -67,12 +67,46 @@ describe('App (integration)', () => {
             expect(getRoutes(app)).toContain('health');
         });
 
-        it('should expose the "/docs" route', () => {
-            expect(getRoutes(app)).toContain('docs');
+        it('should not expose the "/docs" route', () => {
+            expect(getRoutes(app)).not.toContain('docs');
         });
 
         it('should not expose the "/swagger" route', () => {
             expect(getRoutes(app)).not.toContain('swagger');
+        });
+    });
+
+    describe('when NODE_ENV is "performance"', () => {
+        beforeAll(async () => {
+            vi.stubEnv('NODE_ENV', 'performance');
+            vi.resetModules();
+            const { default: buildAppFresh } = await import('#app/app.js');
+
+            app = await buildAppFresh();
+        });
+
+        afterAll(async () => {
+            if (app) {
+                await app.close();
+            }
+
+            vi.unstubAllEnvs();
+        });
+
+        it('should expose the "/health" route', () => {
+            expect(getRoutes(app)).toContain('health');
+        });
+
+        it('should not expose the "/docs" route', () => {
+            expect(getRoutes(app)).not.toContain('docs');
+        });
+
+        it('should not expose the "/swagger" route', () => {
+            expect(getRoutes(app)).not.toContain('swagger');
+        });
+
+        it('should not use logger', () => {
+            expect(app.log.level).toBeUndefined();
         });
     });
 });

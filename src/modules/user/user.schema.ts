@@ -15,6 +15,7 @@ export const pageSchema = Type.String({
 export const emailSchema = Type.String({ maxLength: 200, pattern: EMAIL_PATTERN });
 export const countSchema = Type.Integer({ minimum: 0, maximum: 1_000_000_000 });
 export const sourceSchema = Type.String({ maxLength: 200 });
+export const dateSchema = Type.String({ format: 'date-time' });
 
 export const registerBodySchema = Type.Object(
     {
@@ -40,3 +41,24 @@ export const registerResponseSchema = Type.Object({
 });
 
 export type IRegisterResponseSchema = Static<typeof registerResponseSchema>;
+
+export const userParamSchema = Type.Object({
+    username: usernameSchema,
+});
+
+export type IuserParams = Static<typeof userParamSchema>;
+
+export const pageInfoSchema = Type.Object({
+    page: pageSchema,
+    count: countSchema,
+    source: Type.Union([sourceSchema, Type.Null()]),
+    createdAt: dateSchema,
+});
+
+export const userResponseSchema = Type.Object({
+    username: usernameSchema,
+    createdAt: dateSchema,
+    pages: Type.Array(pageInfoSchema),
+});
+
+export type IUserResponse = Static<typeof userResponseSchema>;

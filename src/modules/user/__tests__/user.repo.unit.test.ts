@@ -1,4 +1,4 @@
-import type { Page, Prisma, PrismaClient } from '@prisma/client';
+import type { Prisma, PrismaClient } from '@prisma/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { type IRegisterPageParams, UserRepository } from '#modules/user/user.repo.js';
@@ -149,53 +149,6 @@ describe('User Repository (unit)', () => {
             expect(pageFindUniqueMock).toHaveBeenCalledWith({
                 where: { userId_slug: { userId, slug } },
             });
-        });
-    });
-
-    describe('getAllPages()', () => {
-        it('should return all pages for a user', async () => {
-            const userId = 'dummy-user-id';
-            const pages = [
-                {
-                    id: 'page-1',
-                    slug: 'slug-1',
-                    userId,
-                    count: 10,
-                    isSeeded: false,
-                    seededAt: null,
-                    source: '',
-                },
-                {
-                    id: 'page-2',
-                    slug: 'slug-2',
-                    userId,
-                    count: 20,
-                    isSeeded: false,
-                    seededAt: null,
-                    source: '',
-                },
-            ];
-
-            PageFindManyMock.mockResolvedValue(pages);
-
-            const result = await userRepo.getAllPages({ userId });
-
-            expect(result).toEqual(pages);
-            expect(PageFindManyMock).toHaveBeenCalledOnce();
-            expect(PageFindManyMock).toHaveBeenCalledWith({ where: { userId } });
-        });
-
-        it('should return an empty array if no pages are found', async () => {
-            const userId = 'dummy-user-id';
-            const pages: Page[] = [];
-
-            PageFindManyMock.mockResolvedValue(pages);
-
-            const result = await userRepo.getAllPages({ userId });
-
-            expect(result).toEqual(pages);
-            expect(PageFindManyMock).toHaveBeenCalledOnce();
-            expect(PageFindManyMock).toHaveBeenCalledWith({ where: { userId } });
         });
     });
 
@@ -394,6 +347,62 @@ describe('User Repository (unit)', () => {
             ).rejects.toThrow(error);
 
             expect(transactionMock).toHaveBeenCalledOnce();
+        });
+    });
+
+    describe('findUserWithPagesByUsername()', () => {
+        const userId = 'dummy-user-id';
+        const username = 'dummy-username';
+
+        it('should find all pages by username', async () => {
+            const page1 = {
+                id: userId,
+                slug: 'dummy-slug1',
+                userId,
+                count: 10,
+                isSeeded: false,
+                seededAt: null,
+                source: '',
+            };
+
+            const page2 = {
+                id: userId,
+                slug: 'dummy-slug2',
+                userId,
+                count: 123,
+                isSeeded: false,
+                seededAt: null,
+                source: '',
+            };
+
+            const data = {
+                id: userId,
+                username,
+                email: 'test@scalepulse.com',
+                pages: [page1, page2],
+            };
+
+            userFindUniqueMock.mockResolvedValue(data);
+
+            const result = await userRepo.findUserWithPagesByUsername({ username });
+
+            expect(result).toEqual(data);
+            expect(userFindUniqueMock).toHaveBeenCalledWith({
+                where: { username },
+                include: { pages: true },
+            });
+        });
+
+        it('should return null if user not found', async () => {
+            userFindUniqueMock.mockResolvedValue(null);
+
+            const result = await userRepo.findUserWithPagesByUsername({ username });
+
+            expect(result).toBeNull();
+            expect(userFindUniqueMock).toHaveBeenCalledWith({
+                where: { username },
+                include: { pages: true },
+            });
         });
     });
 });

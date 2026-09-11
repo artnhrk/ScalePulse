@@ -7,9 +7,10 @@ import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import scalar from '@scalar/fastify-api-reference';
 import Fastify, { type FastifyInstance } from 'fastify';
 
-import { generateRequestId } from '#bootstrap/requestId.js';
+import configPlugin from '#config/config.plugin.js';
 import { env } from '#config/env.js';
 import prismaPlugin from '#infra/database/prisma.plugin.js';
+import redisPlugin from '#infra/redis/redis.plugin.js';
 import type { HealthRepository } from '#modules/health/health.repo.js';
 import healthModule from '#modules/health/index.js';
 import userModule from '#modules/user/index.js';
@@ -18,6 +19,7 @@ import visitModule from '#modules/visit/index.js';
 import errorHandlerPlugin from '#plugins/errorHandler.plugin.js';
 import requestIdPlugin from '#plugins/requestId.plugin.js';
 import { REQUEST_ID_HEADER } from '#shared/constants/headers.constant.js';
+import logger from '#shared/logger/logger.js';
 
 export interface IBuildAppDeps {
     userRepository?: UserRepository;
@@ -29,16 +31,18 @@ export default async function buildApp(deps: IBuildAppDeps = {}) {
     const { userRepository, healthRepository } = deps;
     // create fastify instance with dynamic logger
     const app = Fastify({
-        logger: {
-            level: env.LOG_LEVEL,
-        },
+        ...(env.NODE_ENV === 'performance'
+            ? { logger: false }
+            : { loggerInstance: logger }),
         requestIdHeader: REQUEST_ID_HEADER,
-        genReqId: generateRequestId,
         ajv: {
             customOptions: {
                 removeAdditional: false,
             },
         },
+
+        // must verify it with deployment configurations
+        keepAliveTimeout: 5_000,
     }).withTypeProvider<TypeBoxTypeProvider>();
 
     // enable cookie
@@ -46,14 +50,14 @@ export default async function buildApp(deps: IBuildAppDeps = {}) {
         secret: env.COOKIE_SECRET,
     });
 
-    // enable cors
+    // enable cors, on required route only
     await app.register(fastifyCors, {
-        origin: true,
+        origin: false,
     });
 
-    // enable helmet
+    // enable helmet, on required route only
     await app.register(fastifyHelmet, {
-        contentSecurityPolicy: false,
+        global: false,
     });
 
     // enable swagger for documentations
@@ -67,19 +71,21 @@ export default async function buildApp(deps: IBuildAppDeps = {}) {
         },
     });
 
-    if (env.NODE_ENV !== 'production') {
+    if (env.NODE_ENV !== 'production' && env.NODE_ENV !== 'performance') {
         await app.register(fastifySwaggerUi, {
             routePrefix: '/swagger',
         });
+
+        await app.register(scalar, {
+            routePrefix: '/docs',
+        });
     }
 
-    await app.register(scalar, {
-        routePrefix: '/docs',
-    });
-
     // register all plugins
+    await app.register(configPlugin);
     await app.register(requestIdPlugin);
     await app.register(prismaPlugin);
+    await app.register(redisPlugin);
     await app.register(errorHandlerPlugin);
 
     // wrapping v1 apis in a plugin

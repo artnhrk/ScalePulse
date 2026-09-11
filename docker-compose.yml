@@ -10,6 +10,16 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:latest
+    container_name: scalepulse-redis
+    command: redis-server --requirepass password123
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
 
 volumes:
   postgres_data:
+  redis_data:
+    driver: local

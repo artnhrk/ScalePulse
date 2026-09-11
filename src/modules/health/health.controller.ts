@@ -13,6 +13,25 @@ export default class HealthController {
         };
     }
 
+    async serviceHealthCheck() {
+        const isDbHealthy = await this.healthRepo.checkDb();
+        const isRedisHealthy = await this.healthRepo.checkRedis();
+
+        const isEverythingHealthy = isDbHealthy && isRedisHealthy;
+
+        return {
+            status: isEverythingHealthy
+                ? HealthStatusEnum.HEALTHY
+                : HealthStatusEnum.UNHEALTHY,
+            uptime: process.uptime(),
+            timestamp: Date.now(),
+            services: {
+                db: isDbHealthy ? ServiceStatusEnum.UP : ServiceStatusEnum.DOWN,
+                redis: isRedisHealthy ? ServiceStatusEnum.UP : ServiceStatusEnum.DOWN,
+            },
+        };
+    }
+
     async dbHealthCheck() {
         const isDbHealthy = await this.healthRepo.checkDb();
 
@@ -22,6 +41,21 @@ export default class HealthController {
             timestamp: Date.now(),
             services: {
                 db: isDbHealthy ? ServiceStatusEnum.UP : ServiceStatusEnum.DOWN,
+            },
+        };
+    }
+
+    async redisHealthCheck() {
+        const isRedisHealthy = await this.healthRepo.checkRedis();
+
+        return {
+            status: isRedisHealthy
+                ? HealthStatusEnum.HEALTHY
+                : HealthStatusEnum.UNHEALTHY,
+            uptime: process.uptime(),
+            timestamp: Date.now(),
+            services: {
+                redis: isRedisHealthy ? ServiceStatusEnum.UP : ServiceStatusEnum.DOWN,
             },
         };
     }

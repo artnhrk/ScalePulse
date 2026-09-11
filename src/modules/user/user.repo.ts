@@ -39,8 +39,13 @@ export class UserRepository {
         return this.prisma.page.findUnique({ where: { userId_slug: { userId, slug } } });
     }
 
-    async getAllPages({ userId }: { userId: string }) {
-        return this.prisma.page.findMany({ where: { userId } });
+    async findUserWithPagesByUsername({ username }: { username: string }) {
+        return this.prisma.user.findUnique({
+            where: { username },
+            include: {
+                pages: true,
+            },
+        });
     }
 
     async registerPage({ db = this.prisma, params }: IRegisterPage) {

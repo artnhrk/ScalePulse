@@ -3,7 +3,7 @@ import type { FastifyInstance } from 'fastify';
 
 import UserController from '#modules/user/user.controller.js';
 import type { UserRepository } from '#modules/user/user.repo.js';
-import { registerOptions } from '#modules/user/user.routes.options.js';
+import { registerOptions, userOptions } from '#modules/user/user.routes.options.js';
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
 
 export default function userRoutes(
@@ -20,5 +20,13 @@ export default function userRoutes(
         return reply
             .status(StatusCode.CREATED)
             .send(await userController.register({ body, logger }));
+    });
+
+    routes.get('/:username', { schema: userOptions }, async (req, reply) => {
+        const params = req.params;
+        const logger = req.log;
+        return reply
+            .status(StatusCode.OK)
+            .send(await userController.getUserByUsername({ params, logger }));
     });
 }
