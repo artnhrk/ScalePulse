@@ -2,13 +2,11 @@ import 'fastify';
 
 import type { PrismaClient } from '@prisma/client';
 
+import type { Env } from '#config/env.schema.js';
+
 declare module 'fastify' {
     interface FastifyInstance {
-        config: {
-            NODE_ENV: string;
-            PORT: number;
-            LOG_LEVEL: string;
-        };
+        config: Env;
         prisma: PrismaClient;
     }
 

@@ -1,4 +1,4 @@
-import { type Static, Type } from '@sinclair/typebox';
+import { type StaticDecode, Type } from '@sinclair/typebox';
 
 import { LOG_LEVELS, NODE_ENVS } from '#config/constants.js';
 
@@ -47,4 +47,4 @@ export const envSchema = Type.Object({
 });
 
 // define the env type
-export type Env = Static<typeof envSchema>;
+export type Env = StaticDecode<typeof envSchema>;

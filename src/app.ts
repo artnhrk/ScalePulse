@@ -8,6 +8,7 @@ import scalar from '@scalar/fastify-api-reference';
 import Fastify, { type FastifyInstance } from 'fastify';
 
 import { generateRequestId } from '#bootstrap/requestId.js';
+import configPlugin from '#config/config.plugin.js';
 import { env } from '#config/env.js';
 import prismaPlugin from '#infra/database/prisma.plugin.js';
 import type { HealthRepository } from '#modules/health/health.repo.js';
@@ -78,6 +79,7 @@ export default async function buildApp(deps: IBuildAppDeps = {}) {
     });
 
     // register all plugins
+    await app.register(configPlugin);
     await app.register(requestIdPlugin);
     await app.register(prismaPlugin);
     await app.register(errorHandlerPlugin);
