@@ -37,6 +37,12 @@ export const databaseUrlValidationSchema = Type.String({
     description: 'PostgreSQL connection string',
 });
 
+// validate the redis uri
+export const redisUriValidationSchema = Type.String({
+    pattern: '^redis://[^\\s]+$',
+    description: 'Redis connection string',
+});
+
 // validate and define the env schema
 export const envSchema = Type.Object({
     NODE_ENV: envVarValidationSchema,
@@ -44,6 +50,7 @@ export const envSchema = Type.Object({
     LOG_LEVEL: logLevelValidationSchema,
     COOKIE_SECRET: cookieSecretValidationSchema,
     DATABASE_URL: databaseUrlValidationSchema,
+    REDIS_URI: redisUriValidationSchema,
 });
 
 // define the env type

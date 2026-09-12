@@ -9,7 +9,7 @@ vi.mock('dotenv', () => {
     };
 });
 
-vi.mock('../../shared/errors/fatal.errors.js', () => ({
+vi.mock('#shared/errors/fatal.errors.js', () => ({
     __esModule: true,
     default: vi.fn(() => {
         throw new Error('fatal called');
@@ -34,6 +34,7 @@ describe('env', () => {
                 'DATABASE_URL',
                 'postgresql://postgres:postgres@localhost:5432/test',
             );
+            vi.stubEnv('REDIS_URI', 'redis://localhost:6379');
         });
 
         it('should load ".env.test" when NODE_ENV is "test"', async () => {
@@ -81,6 +82,7 @@ describe('env', () => {
             vi.stubEnv('PORT', dummyPort);
             vi.stubEnv('LOG_LEVEL', dummyLogLevel);
             vi.stubEnv('COOKIE_SECRET', dummyCookieSecret);
+            vi.stubEnv('REDIS_URI', 'redis://localhost:6379');
 
             const { env } = await import('#config/env.js');
 
