@@ -19,6 +19,7 @@ import visitModule from '#modules/visit/index.js';
 import errorHandlerPlugin from '#plugins/errorHandler.plugin.js';
 import requestIdPlugin from '#plugins/requestId.plugin.js';
 import { REQUEST_ID_HEADER } from '#shared/constants/headers.constant.js';
+import logger from '#shared/logger/logger.js';
 
 export interface IBuildAppDeps {
     userRepository?: UserRepository;
@@ -30,9 +31,7 @@ export default async function buildApp(deps: IBuildAppDeps = {}) {
     const { userRepository, healthRepository } = deps;
     // create fastify instance with dynamic logger
     const app = Fastify({
-        logger: {
-            level: env.LOG_LEVEL,
-        },
+        loggerInstance: logger,
         requestIdHeader: REQUEST_ID_HEADER,
         genReqId: generateRequestId,
         ajv: {
