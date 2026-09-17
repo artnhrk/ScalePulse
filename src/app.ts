@@ -39,6 +39,9 @@ export default async function buildApp(deps: IBuildAppDeps = {}) {
                 removeAdditional: false,
             },
         },
+
+        // must verify it with deployment configurations
+        keepAliveTimeout: 5_000,
     }).withTypeProvider<TypeBoxTypeProvider>();
 
     // enable cookie
@@ -71,11 +74,11 @@ export default async function buildApp(deps: IBuildAppDeps = {}) {
         await app.register(fastifySwaggerUi, {
             routePrefix: '/swagger',
         });
-    }
 
-    await app.register(scalar, {
-        routePrefix: '/docs',
-    });
+        await app.register(scalar, {
+            routePrefix: '/docs',
+        });
+    }
 
     // register all plugins
     await app.register(configPlugin);
