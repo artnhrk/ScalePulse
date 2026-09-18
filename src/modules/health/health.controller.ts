@@ -17,10 +17,10 @@ export default class HealthController {
         const isDbHealthy = await this.healthRepo.checkDb();
         const isRedisHealthy = await this.healthRepo.checkRedis();
 
-        const isEverthingHealthy = isDbHealthy && isRedisHealthy;
+        const isEverythingHealthy = isDbHealthy && isRedisHealthy;
 
         return {
-            status: isEverthingHealthy
+            status: isEverythingHealthy
                 ? HealthStatusEnum.HEALTHY
                 : HealthStatusEnum.UNHEALTHY,
             uptime: process.uptime(),

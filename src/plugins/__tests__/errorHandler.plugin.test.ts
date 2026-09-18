@@ -162,6 +162,9 @@ describe('Error Handler Plugin', () => {
             payload: '<name>foo</name>',
         });
 
+        /* We are testing that the statusCode is preserved over the generic error handler
+        and sending 4xx with the generic error message (refer: errorHandler.plugin.ts:78-79).
+        after updating the error handler, we expect the statusCode/message to be preserved */
         expect(res.statusCode).toBe(StatusCode.UNSUPPORTED_MEDIA_TYPE);
         expect(res.json()).toEqual({
             success: false,
