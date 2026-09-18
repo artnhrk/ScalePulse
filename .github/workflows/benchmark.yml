@@ -1,18 +1,17 @@
 name: Performance Benchmark
 
 on:
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch:
   push:
-    branches: ['**'] # Run on pushes to any branch
+    branches: ['**']
 
 jobs:
   benchmark:
-    # Use a 4-core runner if available in your org, otherwise standard ubuntu-latest
     runs-on: ubuntu-latest
 
     env:
       PORT: 6969
-      LOG_LEVEL: warn
+      LOG_LEVEL: silent # CRITICAL: avoid log formatting overhead in event loop
       COOKIE_SECRET: ${{ secrets.BENCH_COOKIE_SECRET || 'benchmark-secret-0123456789abcdef0123456789' }}
       DATABASE_URL: postgresql://admin:password123@localhost:5432/scalepulse?schema=public
       REDIS_URI: redis://:password123@localhost:6379
@@ -32,8 +31,10 @@ jobs:
         env:
           HUSKY: 0
 
-      - name: Generate Prisma Client
-        run: npx prisma generate
+      - name: Generate Prisma Client & Build
+        run: |
+          npx prisma generate
+          npm run build
 
       - name: Run Benchmark Suite
         run: |
