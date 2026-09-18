@@ -1,0 +1,40 @@
+name: Performance Benchmark
+
+on:
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+  push:
+    branches: ['**'] # Run on pushes to any branch
+
+jobs:
+  benchmark:
+    # Use a 4-core runner if available in your org, otherwise standard ubuntu-latest
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: production
+      PORT: 6969
+      LOG_LEVEL: warn
+      COOKIE_SECRET: ${{ secrets.BENCH_COOKIE_SECRET || 'benchmark-secret-0123456789abcdef0123456789' }}
+      DATABASE_URL: postgresql://admin:password123@localhost:5432/scalepulse?schema=public
+      REDIS_URI: redis://:password123@localhost:6379
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js v24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Benchmark Suite
+        run: |
+          chmod +x ./scripts/benchmark.sh
+          ./scripts/benchmark.sh
