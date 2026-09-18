@@ -5,6 +5,8 @@ import redis from '#infra/redis/redis.js';
 export default fp((fastify) => {
     fastify.decorate('redis', redis);
     fastify.addHook('onClose', async () => {
-        await redis.quit();
+        if (redis.status === 'ready') {
+            await redis.quit();
+        }
     });
 });

@@ -67,8 +67,8 @@ describe('App (integration)', () => {
             expect(getRoutes(app)).toContain('health');
         });
 
-        it('should expose the "/docs" route', () => {
-            expect(getRoutes(app)).toContain('docs');
+        it('should not expose the "/docs" route', () => {
+            expect(getRoutes(app)).not.toContain('docs');
         });
 
         it('should not expose the "/swagger" route', () => {

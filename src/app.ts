@@ -11,6 +11,7 @@ import { generateRequestId } from '#bootstrap/requestId.js';
 import configPlugin from '#config/config.plugin.js';
 import { env } from '#config/env.js';
 import prismaPlugin from '#infra/database/prisma.plugin.js';
+import redisPlugin from '#infra/redis/redis.plugin.js';
 import type { HealthRepository } from '#modules/health/health.repo.js';
 import healthModule from '#modules/health/index.js';
 import userModule from '#modules/user/index.js';
@@ -84,6 +85,7 @@ export default async function buildApp(deps: IBuildAppDeps = {}) {
     await app.register(configPlugin);
     await app.register(requestIdPlugin);
     await app.register(prismaPlugin);
+    await app.register(redisPlugin);
     await app.register(errorHandlerPlugin);
 
     // wrapping v1 apis in a plugin
