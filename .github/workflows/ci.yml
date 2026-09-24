@@ -19,13 +19,13 @@ jobs:
       postgres:
         image: postgres:18-alpine
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: scalepulse_test
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: password123
+          POSTGRES_DB: scalepulse
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres -d scalepulse_test"
+          --health-cmd "pg_isready -U admin -d scalepulse"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -41,11 +41,11 @@ jobs:
 
     env:
       NODE_ENV: test
-      PORT: ${{ secrets.PORT }}
-      LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+      PORT: 3000
+      LOG_LEVEL: error
       COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      REDIS_URI: ${{ secrets.REDIS_URI }}
+      DATABASE_URL: postgresql://admin:password123@localhost:5432/scalepulse?schema=public
+      REDIS_URI: redis://localhost:6379
 
     steps:
       - name: Checkout Code
