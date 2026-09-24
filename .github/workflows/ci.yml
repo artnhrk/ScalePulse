@@ -31,8 +31,6 @@ jobs:
           --health-retries 5
       redis:
         image: redis:latest
-        env:
-          REDIS_URI: ${{ secrets.REDIS_URI }}
         ports:
           - 6379:6379
         options: >-
@@ -43,10 +41,11 @@ jobs:
 
     env:
       NODE_ENV: test
-      PORT: 3000
-      LOG_LEVEL: error
+      PORT: ${{ secrets.PORT }}
+      LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
       COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/scalepulse_test
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      REDIS_URI: ${{ secrets.REDIS_URI }}
 
     steps:
       - name: Checkout Code
