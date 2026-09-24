@@ -16,7 +16,17 @@ export default function healthRoutes(
     );
 
     // Route 2: Check the health of the database '/health/db' [using GET] (public)
+    app.get('/health/service', getHealthOptions('Check DB Health'), () =>
+        healthController.serviceHealthCheck(),
+    );
+
+    // Route 3: Check the health of the db '/health/db' [using GET] (public)
     app.get('/health/db', getHealthOptions('Check DB Health'), () =>
         healthController.dbHealthCheck(),
+    );
+
+    // Route 4: Check the health of the Redis cache '/health/redis' [using GET] (public)
+    app.get('/health/redis', getHealthOptions('Check Redis Health'), () =>
+        healthController.redisHealthCheck(),
     );
 }

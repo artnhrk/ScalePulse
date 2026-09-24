@@ -11,6 +11,7 @@ const findUserByUsernameMock = vi.fn();
 const findPageByUserIdMock = vi.fn();
 const registerMock = vi.fn();
 const registerPageMock = vi.fn();
+const findUserWithPagesByUsernameMock = vi.fn();
 
 const UserRepositoryMock = {
     findUserByEmail: findUserByEmailMock,
@@ -18,6 +19,7 @@ const UserRepositoryMock = {
     findPageByUserId: findPageByUserIdMock,
     registerPage: registerPageMock,
     register: registerMock,
+    findUserWithPagesByUsername: findUserWithPagesByUsernameMock,
 } as unknown as UserRepository;
 
 describe('User Routes (Integration)', () => {
@@ -63,7 +65,7 @@ describe('User Routes (Integration)', () => {
         updatedAt: new Date(),
     };
 
-    describe('POST /register', () => {
+    describe('POST /user/register', () => {
         it('should return 201 and register a new user', async () => {
             findUserByEmailMock.mockResolvedValue(null);
             findUserByUsernameMock.mockResolvedValue(null);
@@ -242,6 +244,79 @@ describe('User Routes (Integration)', () => {
             expect(findUserByUsernameMock).not.toHaveBeenCalled();
             expect(findPageByUserIdMock).not.toHaveBeenCalled();
             expect(registerMock).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('GET /user/:username', () => {
+        const username = validPayload.username;
+
+        it('should return 200 and the user data without email', async () => {
+            findUserWithPagesByUsernameMock.mockResolvedValue({
+                ...user,
+                pages: [page],
+            });
+
+            const res = await app.inject({
+                method: 'GET',
+                url: `/api/v1/user/${username}`,
+            });
+
+            expect(res.statusCode).toBe(StatusCode.OK);
+            expect(res.json()).toEqual({
+                username: user.username,
+                createdAt: user.createdAt.toISOString(),
+                pages: [
+                    {
+                        page: page.slug,
+                        count: page.count,
+                        source: page.source,
+                        createdAt: page.createdAt.toISOString(),
+                    },
+                ],
+            });
+
+            expect(findUserWithPagesByUsernameMock).toHaveBeenCalledOnce();
+            expect(findUserWithPagesByUsernameMock).toHaveBeenCalledWith({ username });
+        });
+
+        it('should return 400 when the username is invalid', async () => {
+            const invalidUsername = '.........';
+            const res = await app.inject({
+                method: 'GET',
+                url: `/api/v1/user/${invalidUsername}`,
+            });
+
+            expect(res.statusCode).toBe(StatusCode.BAD_REQUEST);
+            expect(res.json()).toMatchObject({
+                success: false,
+                error: {
+                    code: 'VALIDATION_ERROR',
+                    message: 'Invalid request data',
+                },
+            });
+
+            expect(findUserWithPagesByUsernameMock).not.toHaveBeenCalled();
+        });
+
+        it('should return 404 when the username is not found', async () => {
+            findUserWithPagesByUsernameMock.mockResolvedValue(null);
+
+            const res = await app.inject({
+                method: 'GET',
+                url: `/api/v1/user/${username}`,
+            });
+
+            expect(res.statusCode).toBe(StatusCode.NOT_FOUND);
+            expect(res.json()).toMatchObject({
+                success: false,
+                error: {
+                    code: 'NOT_FOUND',
+                    message: `User with username ${username} not found`,
+                },
+            });
+
+            expect(findUserWithPagesByUsernameMock).toHaveBeenCalledOnce();
+            expect(findUserWithPagesByUsernameMock).toHaveBeenCalledWith({ username });
         });
     });
 });

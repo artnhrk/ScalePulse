@@ -1,6 +1,5 @@
-echo "Running linting and tests..."
+echo "Running lint"
 npm run lint
-npm run test
 
 echo "Running tests with coverage..."
 npm run test:coverage

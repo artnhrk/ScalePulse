@@ -1,6 +1,11 @@
 import type { FastifySchema } from 'fastify';
 
-import { registerBodySchema, registerResponseSchema } from '#modules/user/user.schema.js';
+import {
+    registerBodySchema,
+    registerResponseSchema,
+    userParamSchema,
+    userResponseSchema,
+} from '#modules/user/user.schema.js';
 import { StatusCode } from '#shared/constants/statusCodes.constant.js';
 import { apiErrorResponseSchema } from '#shared/schemas/error.schema.js';
 
@@ -15,7 +20,14 @@ export const registerOptions = {
     },
 } satisfies FastifySchema;
 
-export const getUserOptions = (summary?: string) => ({
-    ...registerOptions,
-    summary: summary ?? registerOptions.summary,
-});
+export const userOptions = {
+    tags: ['User'],
+    summary: 'Get a user information',
+    params: userParamSchema,
+    response: {
+        [StatusCode.OK]: userResponseSchema,
+        [StatusCode.BAD_REQUEST]: apiErrorResponseSchema,
+        [StatusCode.NOT_FOUND]: apiErrorResponseSchema,
+        [StatusCode.INTERNAL_SERVER_ERROR]: apiErrorResponseSchema,
+    },
+} satisfies FastifySchema;

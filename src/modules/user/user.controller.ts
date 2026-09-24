@@ -4,6 +4,7 @@ import type { FastifyBaseLogger } from 'fastify';
 import type { UserRepository } from '#modules/user/user.repo.js';
 import type { IRegisterBody } from '#modules/user/user.schema.js';
 import { ConflictError } from '#shared/errors/apiErrors/ConflictError.js';
+import { NotFoundError } from '#shared/errors/apiErrors/NotFoundError.js';
 
 export interface IRegisterArgs {
     body: IRegisterBody;
@@ -151,6 +152,38 @@ export default class UserController {
             source: createdPage.source,
             createdAt: createdPage.createdAt,
             updatedAt: createdPage.updatedAt,
+        };
+    }
+
+    // get user and pages by username, (expect email: protecting user information)
+    async getUserByUsername({
+        params,
+        logger,
+    }: {
+        params: { username: string };
+        logger: FastifyBaseLogger;
+    }) {
+        const { username } = params;
+        const user = await this.userRepository.findUserWithPagesByUsername({ username });
+
+        if (!user) {
+            logger.info({ username }, `User with username ${username} not found`);
+            throw new NotFoundError(`User with username ${username} not found`);
+        }
+
+        const mappedPages = user.pages.map((page) => {
+            return {
+                page: page.slug,
+                count: page.count,
+                source: page.source,
+                createdAt: page.createdAt.toISOString(),
+            };
+        });
+
+        return {
+            username: user.username,
+            createdAt: user.createdAt.toISOString(),
+            pages: mappedPages,
         };
     }
 }
