@@ -106,14 +106,16 @@ describe('UserController (unit)', () => {
                 logger: loggerMock,
             });
             expect(registerMock).toHaveBeenCalledOnce();
-            expect(result).toEqual({
-                username: user.username,
-                email: user.email,
-                page: page.slug,
-                count: page.count,
-                source: page.source,
-                createdAt: expect.any(Date) as Date,
-                updatedAt: expect.any(Date) as Date,
+            expect(result).toMatchObject({
+                success: true,
+                message: 'User Registered Successfully',
+                data: {
+                    username: user.username,
+                    email: user.email,
+                    page: page.slug,
+                    count: page.count,
+                    source: page.source,
+                },
             });
         });
 
@@ -149,8 +151,14 @@ describe('UserController (unit)', () => {
                 isSeeded: false,
                 seededAt: null,
             });
-            expect(result.count).toBe(0);
-            expect(result.source).toBeNull();
+            expect(result).toMatchObject({
+                success: true,
+                message: 'User Registered Successfully',
+                data: {
+                    count: 0,
+                    source: null,
+                },
+            });
         });
     });
 
@@ -179,13 +187,17 @@ describe('UserController (unit)', () => {
                 },
             });
             expect(result).toEqual({
-                username: user.username,
-                email: user.email,
-                page: createdPage.slug,
-                count: createdPage.count,
-                source: createdPage.source,
-                createdAt: expect.any(Date) as Date,
-                updatedAt: expect.any(Date) as Date,
+                success: true,
+                message: 'Page Created Successfully',
+                data: {
+                    username: user.username,
+                    email: user.email,
+                    page: createdPage.slug,
+                    count: createdPage.count,
+                    source: createdPage.source,
+                    createdAt: expect.any(Date) as Date,
+                    updatedAt: expect.any(Date) as Date,
+                },
             });
         });
 
@@ -220,14 +232,18 @@ describe('UserController (unit)', () => {
                     seededAt: null,
                 },
             });
-            expect(result).toEqual({
-                username: user.username,
-                email: user.email,
-                page: createdPage.slug,
-                count: createdPage.count,
-                source: createdPage.source,
-                createdAt: expect.any(Date) as Date,
-                updatedAt: expect.any(Date) as Date,
+            expect(result).toMatchObject({
+                success: true,
+                message: 'Page Created Successfully',
+                data: {
+                    username: user.username,
+                    email: user.email,
+                    page: createdPage.slug,
+                    count: createdPage.count,
+                    source: createdPage.source,
+                    createdAt: expect.any(Date) as Date,
+                    updatedAt: expect.any(Date) as Date,
+                },
             });
         });
     });
@@ -245,13 +261,17 @@ describe('UserController (unit)', () => {
             const result = await userController.register({ body, logger: loggerMock });
 
             expect(result).toEqual({
-                username: testData.username,
-                email: testData.email,
-                page: testData.page,
-                count: body.count,
-                source: body.source,
-                createdAt: expect.any(Date) as Date,
-                updatedAt: expect.any(Date) as Date,
+                success: true,
+                message: 'User Registered Successfully',
+                data: {
+                    username: testData.username,
+                    email: testData.email,
+                    page: testData.page,
+                    count: body.count,
+                    source: body.source,
+                    createdAt: expect.any(Date) as Date,
+                    updatedAt: expect.any(Date) as Date,
+                },
             });
             expect(findUserByEmailMock).toHaveBeenCalledOnce();
             expect(findUserByEmailMock).toHaveBeenCalledWith(body.email);
@@ -276,13 +296,17 @@ describe('UserController (unit)', () => {
 
             const result = await userController.register({ body, logger: loggerMock });
             expect(result).toEqual({
-                username: testData.username,
-                email: testData.email,
-                page: testData.page,
-                count: body.count,
-                source: body.source,
-                createdAt: expect.any(Date) as Date,
-                updatedAt: expect.any(Date) as Date,
+                success: true,
+                message: 'Page Created Successfully',
+                data: {
+                    username: testData.username,
+                    email: testData.email,
+                    page: testData.page,
+                    count: body.count,
+                    source: body.source,
+                    createdAt: expect.any(Date) as Date,
+                    updatedAt: expect.any(Date) as Date,
+                },
             });
 
             expect(findUserByEmailMock).toHaveBeenCalledOnce();
@@ -388,7 +412,7 @@ describe('UserController (unit)', () => {
     describe('getUserByUsername()', () => {
         const createdAt = new Date('2026-01-01T00:00:00.000Z');
 
-        it('should return user data without email', async () => {
+        it('should return user data', async () => {
             const username = testData.username;
             const page = makePage();
 
@@ -404,18 +428,42 @@ describe('UserController (unit)', () => {
                 logger: loggerMock,
             });
 
-            expect(result).toEqual({
-                username: testData.username,
-                createdAt: createdAt.toISOString(),
-                pages: [
-                    {
-                        page: page.slug,
-                        count: page.count,
-                        source: page.source,
-                        createdAt: page.createdAt.toISOString(),
-                    },
-                ],
+            expect(result).toMatchObject({
+                success: true,
+                message: 'Username and Page found',
+                data: {
+                    username: testData.username,
+                    createdAt: createdAt.toISOString(),
+                    pages: [
+                        {
+                            page: page.slug,
+                            count: page.count,
+                            source: page.source,
+                            createdAt: page.createdAt.toISOString(),
+                        },
+                    ],
+                },
             });
+        });
+
+        it('should not contain email in the user data', async () => {
+            const username = testData.username;
+            const page = makePage();
+
+            findUserWithPagesByUsernameMock.mockResolvedValueOnce({
+                id: testData.userId,
+                username: testData.username,
+                createdAt,
+                pages: [page],
+            });
+
+            const result = await userController.getUserByUsername({
+                params: { username },
+                logger: loggerMock,
+            });
+
+            expect(result).toBeDefined();
+            expect(JSON.stringify(result)).not.toContain(testData.email);
         });
 
         it('should throw error if user not found', async () => {

@@ -33,11 +33,15 @@ export const registerBodySchema = Type.Object(
 export type IRegisterBody = Static<typeof registerBodySchema>;
 
 export const registerResponseSchema = Type.Object({
-    username: usernameSchema,
-    page: pageSchema,
-    email: emailSchema, // email is required for later migrations without braking
-    count: countSchema, // this will be visible to everyone, [for migrations from other platforms]
-    source: Type.Union([sourceSchema, Type.Null()]), // this will be visible to everyone, [for transparency from other platforms]
+    success: Type.Literal(true),
+    message: Type.String(),
+    data: Type.Object({
+        username: usernameSchema,
+        page: pageSchema,
+        email: emailSchema, // email is required for later migrations without braking
+        count: countSchema, // this will be visible to everyone, [for migrations from other platforms]
+        source: Type.Union([sourceSchema, Type.Null()]), // this will be visible to everyone, [for transparency from other platforms]
+    }),
 });
 
 export type IRegisterResponseSchema = Static<typeof registerResponseSchema>;
@@ -56,9 +60,13 @@ export const pageInfoSchema = Type.Object({
 });
 
 export const userResponseSchema = Type.Object({
-    username: usernameSchema,
-    createdAt: dateSchema,
-    pages: Type.Array(pageInfoSchema),
+    success: Type.Literal(true),
+    message: Type.String(),
+    data: Type.Object({
+        username: usernameSchema,
+        createdAt: dateSchema,
+        pages: Type.Array(pageInfoSchema),
+    }),
 });
 
 export type IUserResponse = Static<typeof userResponseSchema>;

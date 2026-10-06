@@ -81,7 +81,19 @@ export default class UserController {
     }
 
     // register new user with new email, and username
-    async registerNewUser({ body, logger }: IRegisterArgs) {
+    async registerNewUser({ body, logger }: IRegisterArgs): Promise<{
+        success: true;
+        message: string;
+        data: {
+            username: string;
+            email: string;
+            page: string;
+            count: number;
+            source: string | null;
+            createdAt: Date;
+            updatedAt: Date;
+        };
+    }> {
         const { username, page, email, count, source }: IRegisterBody = body;
 
         const initialCount = count ?? 0;
@@ -107,18 +119,34 @@ export default class UserController {
             });
 
         return {
-            username: createdUser.username,
-            email: createdUser.email,
-            page: createdPage.slug,
-            count: createdPage.count,
-            source: createdPage.source,
-            createdAt: createdUser.createdAt,
-            updatedAt: createdUser.updatedAt,
+            success: true,
+            message: 'User Registered Successfully',
+            data: {
+                username: createdUser.username,
+                email: createdUser.email,
+                page: createdPage.slug,
+                count: createdPage.count,
+                source: createdPage.source,
+                createdAt: createdUser.createdAt,
+                updatedAt: createdUser.updatedAt,
+            },
         };
     }
 
     // register new user with existing email and username
-    async registerNewPage({ body, logger, user }: IRegisterNewPageArgs) {
+    async registerNewPage({ body, logger, user }: IRegisterNewPageArgs): Promise<{
+        success: true;
+        message: string;
+        data: {
+            username: string;
+            email: string;
+            page: string;
+            count: number;
+            source: string | null;
+            createdAt: Date;
+            updatedAt: Date;
+        };
+    }> {
         const { page, count, source } = body;
         const { username, id: userId } = user;
 
@@ -145,13 +173,17 @@ export default class UserController {
         const createdPage = await this.userRepository.registerPage({ params });
 
         return {
-            username: user.username,
-            email: user.email,
-            page: createdPage.slug,
-            count: createdPage.count,
-            source: createdPage.source,
-            createdAt: createdPage.createdAt,
-            updatedAt: createdPage.updatedAt,
+            success: true,
+            message: 'Page Created Successfully',
+            data: {
+                username: user.username,
+                email: user.email,
+                page: createdPage.slug,
+                count: createdPage.count,
+                source: createdPage.source,
+                createdAt: createdPage.createdAt,
+                updatedAt: createdPage.updatedAt,
+            },
         };
     }
 
@@ -162,7 +194,20 @@ export default class UserController {
     }: {
         params: { username: string };
         logger: FastifyBaseLogger;
-    }) {
+    }): Promise<{
+        success: true;
+        message: string;
+        data: {
+            username: string;
+            createdAt: string;
+            pages: {
+                page: string;
+                count: number;
+                source: string | null;
+                createdAt: string;
+            }[];
+        };
+    }> {
         const { username } = params;
         const user = await this.userRepository.findUserWithPagesByUsername({ username });
 
@@ -181,9 +226,13 @@ export default class UserController {
         });
 
         return {
-            username: user.username,
-            createdAt: user.createdAt.toISOString(),
-            pages: mappedPages,
+            success: true,
+            message: 'Username and Page found',
+            data: {
+                username: user.username,
+                createdAt: user.createdAt.toISOString(),
+                pages: mappedPages,
+            },
         };
     }
 }
