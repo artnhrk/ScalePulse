@@ -59,11 +59,15 @@ describe('User Routes (Database Integration)', () => {
 
                 const result = response.json<IRegisterResponseSchema>();
                 expect(result).toMatchObject({
-                    username: payload.username,
-                    email: payload.email,
-                    page: payload.page,
-                    count: payload.count,
-                    source: payload.source,
+                    success: true,
+                    message: 'User Registered Successfully',
+                    data: {
+                        username: payload.username,
+                        email: payload.email,
+                        page: payload.page,
+                        count: payload.count,
+                        source: payload.source,
+                    },
                 });
 
                 const user = await userRepository.findUserByUsername(payload.username);
@@ -216,11 +220,15 @@ describe('User Routes (Database Integration)', () => {
                 const result = response.json<IRegisterResponseSchema>();
 
                 expect(result).toMatchObject({
-                    username: payload.username,
-                    email: payload.email,
-                    page: payload.page,
-                    count: payload.count,
-                    source: payload.source,
+                    success: true,
+                    message: 'Page Created Successfully',
+                    data: {
+                        username: payload.username,
+                        email: payload.email,
+                        page: payload.page,
+                        count: payload.count,
+                        source: payload.source,
+                    },
                 });
 
                 const users = await prisma.user.findMany();
@@ -271,17 +279,21 @@ describe('User Routes (Database Integration)', () => {
                 });
 
                 expect(response.statusCode).toBe(StatusCode.OK);
-                expect(response.json()).toEqual({
-                    username: user.username,
-                    createdAt: user.createdAt.toISOString(),
-                    pages: [
-                        {
-                            page: page.slug,
-                            count: page.count,
-                            source: page.source,
-                            createdAt: page.createdAt.toISOString(),
-                        },
-                    ],
+                expect(response.json()).toMatchObject({
+                    success: true,
+                    message: 'Username and Page found',
+                    data: {
+                        username: user.username,
+                        createdAt: user.createdAt.toISOString(),
+                        pages: [
+                            {
+                                page: page.slug,
+                                count: page.count,
+                                source: page.source,
+                                createdAt: page.createdAt.toISOString(),
+                            },
+                        ],
+                    },
                 });
             });
         });

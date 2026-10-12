@@ -79,11 +79,15 @@ describe('User Routes (Integration)', () => {
 
             expect(res.statusCode).toBe(StatusCode.CREATED);
             expect(res.json()).toEqual({
-                username: user.username,
-                email: user.email,
-                page: page.slug,
-                count: page.count,
-                source: page.source,
+                success: true,
+                message: 'User Registered Successfully',
+                data: {
+                    username: user.username,
+                    email: user.email,
+                    page: page.slug,
+                    count: page.count,
+                    source: page.source,
+                },
             });
 
             expect(findUserByEmailMock).toHaveBeenCalledOnce();
@@ -262,17 +266,21 @@ describe('User Routes (Integration)', () => {
             });
 
             expect(res.statusCode).toBe(StatusCode.OK);
-            expect(res.json()).toEqual({
-                username: user.username,
-                createdAt: user.createdAt.toISOString(),
-                pages: [
-                    {
-                        page: page.slug,
-                        count: page.count,
-                        source: page.source,
-                        createdAt: page.createdAt.toISOString(),
-                    },
-                ],
+            expect(res.json()).toMatchObject({
+                success: true,
+                message: 'Username and Page found',
+                data: {
+                    username: user.username,
+                    createdAt: user.createdAt.toISOString(),
+                    pages: [
+                        {
+                            page: page.slug,
+                            count: page.count,
+                            source: page.source,
+                            createdAt: page.createdAt.toISOString(),
+                        },
+                    ],
+                },
             });
 
             expect(findUserWithPagesByUsernameMock).toHaveBeenCalledOnce();

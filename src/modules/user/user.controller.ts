@@ -1,19 +1,14 @@
-import type { User } from '@prisma/client';
-import type { FastifyBaseLogger } from 'fastify';
-
 import type { UserRepository } from '#modules/user/user.repo.js';
 import type { IRegisterBody } from '#modules/user/user.schema.js';
+import type {
+    IGetUserByUsernameArgs,
+    IGetUserByUsernameResponse,
+    IRegisterArgs,
+    IRegisterNewPageArgs,
+    IRegisterUserPageResponse,
+} from '#modules/user/user.types.js';
 import { ConflictError } from '#shared/errors/apiErrors/ConflictError.js';
 import { NotFoundError } from '#shared/errors/apiErrors/NotFoundError.js';
-
-export interface IRegisterArgs {
-    body: IRegisterBody;
-    logger: FastifyBaseLogger;
-}
-
-interface IRegisterNewPageArgs extends IRegisterArgs {
-    user: User;
-}
 
 export default class UserController {
     private userRepository: UserRepository;
@@ -81,7 +76,10 @@ export default class UserController {
     }
 
     // register new user with new email, and username
-    async registerNewUser({ body, logger }: IRegisterArgs) {
+    async registerNewUser({
+        body,
+        logger,
+    }: IRegisterArgs): Promise<IRegisterUserPageResponse> {
         const { username, page, email, count, source }: IRegisterBody = body;
 
         const initialCount = count ?? 0;
@@ -107,18 +105,26 @@ export default class UserController {
             });
 
         return {
-            username: createdUser.username,
-            email: createdUser.email,
-            page: createdPage.slug,
-            count: createdPage.count,
-            source: createdPage.source,
-            createdAt: createdUser.createdAt,
-            updatedAt: createdUser.updatedAt,
+            success: true,
+            message: 'User Registered Successfully',
+            data: {
+                username: createdUser.username,
+                email: createdUser.email,
+                page: createdPage.slug,
+                count: createdPage.count,
+                source: createdPage.source,
+                createdAt: createdUser.createdAt,
+                updatedAt: createdUser.updatedAt,
+            },
         };
     }
 
     // register new user with existing email and username
-    async registerNewPage({ body, logger, user }: IRegisterNewPageArgs) {
+    async registerNewPage({
+        body,
+        logger,
+        user,
+    }: IRegisterNewPageArgs): Promise<IRegisterUserPageResponse> {
         const { page, count, source } = body;
         const { username, id: userId } = user;
 
@@ -145,13 +151,17 @@ export default class UserController {
         const createdPage = await this.userRepository.registerPage({ params });
 
         return {
-            username: user.username,
-            email: user.email,
-            page: createdPage.slug,
-            count: createdPage.count,
-            source: createdPage.source,
-            createdAt: createdPage.createdAt,
-            updatedAt: createdPage.updatedAt,
+            success: true,
+            message: 'Page Created Successfully',
+            data: {
+                username: user.username,
+                email: user.email,
+                page: createdPage.slug,
+                count: createdPage.count,
+                source: createdPage.source,
+                createdAt: createdPage.createdAt,
+                updatedAt: createdPage.updatedAt,
+            },
         };
     }
 
@@ -159,10 +169,7 @@ export default class UserController {
     async getUserByUsername({
         params,
         logger,
-    }: {
-        params: { username: string };
-        logger: FastifyBaseLogger;
-    }) {
+    }: IGetUserByUsernameArgs): Promise<IGetUserByUsernameResponse> {
         const { username } = params;
         const user = await this.userRepository.findUserWithPagesByUsername({ username });
 
@@ -181,9 +188,13 @@ export default class UserController {
         });
 
         return {
-            username: user.username,
-            createdAt: user.createdAt.toISOString(),
-            pages: mappedPages,
+            success: true,
+            message: 'Username and Page found',
+            data: {
+                username: user.username,
+                createdAt: user.createdAt.toISOString(),
+                pages: mappedPages,
+            },
         };
     }
 }
